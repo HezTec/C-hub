@@ -1,0 +1,30 @@
+{
+  "name": "c-hub",
+  "version": "1.0.0",
+  "description": "A webpage where users can have links to all their social medias as well as highlight and advertise some of their social medias",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HezTec/C-hub.git"
+  },
+  "author": "CoolGuys",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HezTec/C-hub/issues"
+  },
+  "homepage": "https://github.com/HezTec/C-hub#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "connect-flash": "^0.1.1",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "express-session": "^1.17.1",
+    "mongoose": "^5.11.15",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
+  }
+}
