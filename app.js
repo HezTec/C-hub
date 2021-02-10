@@ -16,6 +16,10 @@ mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true, useUnified
   .then(() => console.log('connected,,'))
   .catch((err) => console.log(err + ' thrown error'));
 
+
+//CSS linking
+app.use(express.static(__dirname + '/public'));
+
 //EJS
 app.set('view engine', 'ejs');
 app.use(expressEjsLayout);
@@ -25,7 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 
 //express session code
 app.use(session({
-  secret: 'secret',
+  secret: 'secretcoolsession',
   resave: true,
   saveUninitialized: true
 }));
@@ -45,5 +49,6 @@ app.use((req, res, next) => {
 //Routes
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
+
 
 app.listen(3000);

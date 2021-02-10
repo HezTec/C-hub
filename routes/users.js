@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/user.js");
 const bcrypt = require('bcrypt');
 const passport = require('passport');
+const { ensureAuthenticated } = require("../config/auth.js");
 
 //login handle
 router.get('/login', (req, res) => {
@@ -13,26 +14,40 @@ router.get('/register', (req, res) => {
   res.render('register');
 });
 
-//Register handle
+//The handler for the the registeration of the page
 router.post('/register', (req, res) => {
-  const { name, email, password, password2 } = req.body;
-  let errors = [];
-  console.log(' Name: ' + name + ' Email: ' + email + ' Pass: ' + password);
+  const {
+    name,
+    email,
+    password,
+    password2
+  } = req.body;
+  let errors = []; //array that gathers errors to display to the user
+  console.log(' name: ' + name + ' Email: ' + email + ' Pass: ' + password);
   if (!name || !email || !password || !password2) {
-    errors.push({ msg: "please fill in all fields" });
+    errors.push({
+      msg: "please fill in all fields"
+    });
   }
 
   //checking if passwords match
   if (password !== password2) {
-    errors.push({ msg: "passwords dont match" });
+    errors.push({
+      msg: "passwords dont match"
+    });
   }
 
   //checking if password length is above 6 characters
   if (password.length < 6) {
-    errors.push({ msg: "password must be at least 6 characters" });
+    errors.push({
+      msg: "password must be at least 6 characters"
+    });
   }
 
-  //checking for the found errors
+  /*
+  checking for the found errors
+  if errors are found the page will re-render with the same entered info and display errors
+  */
   if (errors.length > 0) {
     res.render('register', {
       errors: errors,
@@ -42,14 +57,25 @@ router.post('/register', (req, res) => {
       password2: password2
     });
   } else {
-    //password validation passed
-    User.findOne({ email: email }).exec((err, user) => {
+    //password validation passed, now below code checks to see if user has already ben register
+    User.findOne({
+      email: email
+    }).exec((err, user) => {
       console.log(user);
       if (user) {
-        errors.push({ msg: 'email already registered' });
-        res.render('register', { errors, name, email, password, password2 });
+        errors.push({
+          msg: 'email already registered'
+        });
+        res.render('register', {
+          errors,
+          name,
+          email,
+          password,
+          password2
+        });
 
       } else {
+        //creating a new user for the db
         const newUser = new User({
           name: name,
           email: email,
@@ -91,6 +117,12 @@ router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success_msg', 'Now logged out');
   res.redirect('/users/login');
+});
+
+router.get('/change-password', ensureAuthenticated, (req, res) => {
+  res.render('change-password', {
+    user: req.user
+  });
 });
 
 module.exports = router;
