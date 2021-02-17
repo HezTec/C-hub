@@ -6,7 +6,9 @@ const expressEjsLayout = require('express-ejs-layouts');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
+User = require("./models/user");
 
+require('dotenv').config();
 //importing the passport config
 require("./config/passport")(passport);
 
@@ -34,6 +36,14 @@ app.use(session({
   saveUninitialized: true
 }));
 
+// PASSPORT CONFIGURATION
+app.use(require("express-session")({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -49,6 +59,5 @@ app.use((req, res, next) => {
 //Routes
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
-
 
 app.listen(3000);
