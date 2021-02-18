@@ -6,6 +6,7 @@ const passport = require('passport');
 var async = require("async");
 var nodemailer = require("nodemailer");
 var crypto = require("crypto");
+const { findByIdAndUpdate } = require('../models/user.js');
 
 //login handle
 router.get('/login', (req, res) => {
@@ -32,7 +33,7 @@ router.post('/register', (req, res) => {
 
   //checking if password length is above 6 characters
   if (password.length < 6) {
-    alert('Password Must Be 6 Characters');
+    req.flash('success_msg', 'Password Must be 6 characters or more');
   }
 
   //checking for the found errors
@@ -89,7 +90,7 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-//logout
+//Logout method
 router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success_msg', 'You successfully logged out!');
@@ -109,6 +110,7 @@ router.post('/forgot', function (req, res, next) {
         done(err, token);
       });
     },
+
     function (token, done) {
       User.findOne({ email: req.body.email }, function (err, user) {
         if (!user) {
@@ -124,14 +126,17 @@ router.post('/forgot', function (req, res, next) {
         });
       });
     },
+
     function (token, user, done) {
       var smtpTransport = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
           user: 'chubservices@gmail.com',
+          //Need to find way to hide password
           pass: 'Nfmq2DMFASM<S3F#.'
         }
       });
+
       var mailOptions = {
         to: user.email,
         from: 'chubservices@gmail.com',
@@ -141,15 +146,17 @@ router.post('/forgot', function (req, res, next) {
           'http://' + req.headers.host + '/users/reset/' + token + '\n\n' +
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
+
       smtpTransport.sendMail(mailOptions, function (err) {
         console.log('mail sent');
         req.flash('success_msg', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
         done(err, 'done');
       });
     }
+
   ], function (err) {
     if (err) return next(err);
-    res.redirect('/users/forgot');
+    res.redirect('/users/login');
   });
 });
 
@@ -171,21 +178,40 @@ router.post('/reset/:token', function (req, res) {
           req.flash('error', 'Password reset token is invalid or has expired.');
           return res.redirect('back');
         }
+
+        console.log(req.body.password, '       ', req.body.confirm);
+
         //Handles the change password with the schema
         if (req.body.password === req.body.confirm) {
-            user.setPassword(req.body.password, function (err) {
-            user.resetPasswordToken = undefined;
-            user.resetPasswordExpires = undefined;
+          bcrypt.genSalt(10, (err, salt) =>
+            bcrypt.hash(req.body.password, salt,
+              (err, hash) => {
+                if (err) throw err;
 
-            user.save(function (err) {
-              req.logIn(user, function (err) {
-                done(err, user);
-              });
-            });
-          })
-        } else {
-            req.flash("error", "Passwords do not match.");
-            return res.redirect('back');
+                //save password to hash
+                req.body.password = hash;
+                console.log(req.body.password, '       ', hash);
+                User.findByIdAndUpdate({ _id: user._id }, { "password": req.body.password }, function (err, result) {
+                  user.resetPasswordToken = undefined;
+                  user.resetPasswordExpires = undefined;
+
+                  if (err) {
+                    res.send(err)
+                  }
+                  else {
+                    req.login(user, function (err) {
+                      done(err, user);
+                    });
+                  }
+               
+                })
+              }));
+
+        }
+
+        else {
+          req.flash("error", "Passwords do not match.");
+          return res.redirect('back');
         }
       });
     },
@@ -194,6 +220,7 @@ router.post('/reset/:token', function (req, res) {
         service: 'Gmail',
         auth: {
           user: 'chubservices@gmail.com',
+          //Need to find way to hide password
           pass: 'Nfmq2DMFASM<S3F#.'
         }
       });
