@@ -133,7 +133,7 @@ router.post('/forgot', function (req, res, next) {
         auth: {
           user: 'chubservices@gmail.com',
           //Need to find way to hide password
-          pass: 'Nfmq2DMFASM<S3F#.'
+          pass: process.env.GMAILPW
         }
       });
 
@@ -221,7 +221,7 @@ router.post('/reset/:token', function (req, res) {
         auth: {
           user: 'chubservices@gmail.com',
           //Need to find way to hide password
-          pass: 'Nfmq2DMFASM<S3F#.'
+          pass: process.env.GMAILPW
         }
       });
       var mailOptions = {
