@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 
 
 router.get('/register', (req, res) => {
-	res.redner('register');
+	res.render('register');
 });
 
 router.get('/dashboard', ensureAuthenticated, (req, res) => {

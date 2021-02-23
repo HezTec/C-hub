@@ -1,21 +1,39 @@
 <!DOCTYPE html>
 <html>
     <%- include ('./partials/messages') %>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>C-Hub</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="/css/Login-Form-Dark.css">
-    <link rel="stylesheet" href="/css/styles.css">
-</head>
+
+    <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
+        <div class="container"><img src="/img/C-hub%20(3).png"><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
+                <div class="d-flex justify-content-center h-100">
+                    <div class="searchbar"><input type="text" class="search_input" placeholder="Search..."><a class="search_icon" href="#"><i class="fas fa-search"></i></a></div>
+        </div>
+    </nav>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>C-Hub</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+        <link rel="stylesheet" href="/css/Login-Form-Dark.css">
+        <link rel="stylesheet" href="/css/styles.css">
+        <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
+        <link rel="stylesheet" href="/css/Growing-Search-Bar-Animated-Text-Input.css">
+        <link rel="stylesheet" href="/css/Search-Input-responsive.css">
+    </head>
 
 <body>
     <div class="login-dark">
-        <form action="/users/register" method="post">
+        <form action="/users/register" method="post"
+         oninput='password2.setCustomValidity(password2.value != password.value ? "Passwords do not match." : "")'>
             <h2 class="sr-only">Register!</h2>
-            <div class="mx-auto"><img src="/img/C-hub (3).png" class="img-fluid" alt="Responsive image"></div>
+            <div class="text-center"><img src="/img/C-hub (3).png" class="img-fluid" alt="Responsive image"></div>
             <div class="form-group"><input class="form-control" type="email" name="email" placeholder="Email" value="<%= typeof email != 'undefined' ? email : '' %>"></div>
             <div class="form-group"><input class="form-control" type="username" name="username" placeholder="Username" value="<%= typeof username != 'undefined' ? username : '' %>" ></div>
             <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password" value="<%= typeof password != 'undefined' ? password : '' %>" ></div>
