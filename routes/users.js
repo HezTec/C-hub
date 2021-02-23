@@ -8,6 +8,10 @@ var nodemailer = require("nodemailer");
 var crypto = require("crypto");
 const { findByIdAndUpdate } = require('../models/user.js');
 
+router.get('/welcome', (req, res) => {
+  res.render('welcome');
+});
+
 //login handle
 router.get('/login', (req, res) => {
   res.render('login');
@@ -132,7 +136,6 @@ router.post('/forgot', function (req, res, next) {
         service: 'Gmail',
         auth: {
           user: 'chubservices@gmail.com',
-          //Need to find way to hide password
           pass: process.env.GMAILPW
         }
       });
@@ -219,7 +222,6 @@ router.post('/reset/:token', function (req, res) {
         service: 'Gmail',
         auth: {
           user: 'chubservices@gmail.com',
-          //Need to find way to hide password
           pass: process.env.GMAILPW
         }
       });
