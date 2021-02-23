@@ -206,7 +206,6 @@ router.post('/reset/:token', function (req, res) {
                
                 })
               }));
-
         }
 
         else {
@@ -228,8 +227,8 @@ router.post('/reset/:token', function (req, res) {
         to: user.email,
         from: 'chubservices@gmail.com',
         subject: 'Your password has been changed',
-        text: 'Hello,\n\n' +
-          'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+        text: 'Hello ' + user.username + ',\n\n' +
+          'This is a confirmation that the password for your account at ' + user.email + ' has just been changed.\n'
       };
       smtpTransport.sendMail(mailOptions, function (err) {
         req.flash('success_msg', 'Success! Your password has been changed.');
