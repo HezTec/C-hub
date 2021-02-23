@@ -1,6 +1,7 @@
 .searchbar {
   margin-bottom: auto;
   margin-top: auto;
+  margin-left: 10px;
   height: 60px;
   background-color: #353b48;
   border-radius: 30px;
