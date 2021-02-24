@@ -18,9 +18,14 @@ const UserSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+
+  active: {
+    type: Boolean,
+    default: false
   }
 });
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema, 'userList');
 
 module.exports = User;
