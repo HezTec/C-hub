@@ -8,6 +8,8 @@ var nodemailer = require("nodemailer");
 var crypto = require("crypto");
 const { findByIdAndUpdate } = require('../models/user.js');
 
+//Allows for the C-HUB logo be clicked on in login page
+//to go back to welcome page
 router.get('/welcome', (req, res) => {
   res.render('welcome');
 });
@@ -16,7 +18,7 @@ router.get('/welcome', (req, res) => {
 router.get('/login', (req, res) => {
   res.render('login');
 });
-
+//Renders the register page for access
 router.get('/register', (req, res) => {
   res.render('register');
 });
@@ -86,6 +88,7 @@ router.post('/register', (req, res) => {
   }
 });
 
+//Login handle that signs a user in to their dashboard
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
     successRedirect: '/dashboard',
@@ -106,6 +109,7 @@ router.get('/forgot', function (req, res) {
   res.render('forgot');
 });
 
+//Goes to the forgot page and crypts the login email reset link
 router.post('/forgot', function (req, res, next) {
   async.waterfall([
     function (done) {
@@ -115,6 +119,8 @@ router.post('/forgot', function (req, res, next) {
       });
     },
 
+    //Checks if the account email exist before sending the data and redirects the page back
+    //to the forgot page
     function (token, done) {
       User.findOne({ email: req.body.email }, function (err, user) {
         if (!user) {
@@ -131,6 +137,7 @@ router.post('/forgot', function (req, res, next) {
       });
     },
 
+    //Connects the smtpTransport for email services to send the email for forgot password links
     function (token, user, done) {
       var smtpTransport = nodemailer.createTransport({
         service: 'Gmail',
@@ -140,6 +147,7 @@ router.post('/forgot', function (req, res, next) {
         }
       });
 
+      //Sets up the basic email with the link to reset the password.
       var mailOptions = {
         to: user.email,
         from: 'chubservices@gmail.com',
@@ -150,19 +158,21 @@ router.post('/forgot', function (req, res, next) {
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
 
+      //This is an email success message that lets the user know the email has sent successfully
       smtpTransport.sendMail(mailOptions, function (err) {
         console.log('mail sent');
         req.flash('success_msg', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
         done(err, 'done');
       });
     }
-
+  //This redirects the user to login after changing password
   ], function (err) {
     if (err) return next(err);
     res.redirect('/users/login');
   });
 });
 
+//This makes sure that the reset link is expired or not
 router.get('/reset/:token', function (req, res) {
   User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
     if (!user) {
@@ -173,6 +183,7 @@ router.get('/reset/:token', function (req, res) {
   });
 });
 
+//Handles the reset password request and allows for the user to change password
 router.post('/reset/:token', function (req, res) {
   async.waterfall([
     function (done) {
@@ -181,7 +192,7 @@ router.post('/reset/:token', function (req, res) {
           req.flash('error', 'Password reset token is invalid or has expired.');
           return res.redirect('back');
         }
-
+        //Shows in the console is recieving the right information after testing
         console.log(req.body.password, '       ', req.body.confirm);
 
         //Handles the change password with the schema
@@ -217,6 +228,7 @@ router.post('/reset/:token', function (req, res) {
         }
       });
     },
+    //This sends an email to the user when the password has been changed to notify them
     function (user, done) {
       var smtpTransport = nodemailer.createTransport({
         service: 'Gmail',
@@ -232,6 +244,7 @@ router.post('/reset/:token', function (req, res) {
         text: 'Hello ' + user.username + ',\n\n' +
           'This is a confirmation that the password for your account at ' + user.email + ' has just been changed.\n'
       };
+      //Tells the user the password was successfuly changed and logs them into their account
       smtpTransport.sendMail(mailOptions, function (err) {
         req.flash('success_msg', 'Success! Your password has been changed.');
         done(err);
