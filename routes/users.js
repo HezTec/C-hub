@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const nodemailer = require('nodemailer');
 const { ensureAuthenticated } = require("../config/auth.js");
+const { findByIdAndUpdate } = require('../models/user.js');
 
 //login handle
 router.get('/login', (req, res) => {
@@ -159,15 +160,15 @@ router.get('/verify/:token', function(req, res) {
       req.flash('error', 'verify token invalid');
       return res.redirect('/users/login');
     }
+    let filter = { _id: verify.userID._id };//getting the user that is referenced in the token db object
+    let update = { active: true };//changing the active parameter to true
 
-
-    let filter = { _id: verify.userID._id };
-    let update = { active: true };
-
+    //executing the update of the active parameter
     User.findByIdAndUpdate(filter, update, function(err, result) {
       if (err) {
         console.log(err);
       } else {
+        //deleteing the token db object after it is used
         VerifyToken.findByIdAndRemove(verify._id, function(err) {
           if (err) {
             console.log(err);
@@ -179,6 +180,9 @@ router.get('/verify/:token', function(req, res) {
     /*
     upon finding a sucessful token loads the verify page and sends the
     object that was found in the database
+
+    note we really dont need to send the verify shit to the page, was more for testing
+    we could just send them to a page that says "congrats, you are now a verified user" or some shit
     */
     res.render('verify', {
       verify: verify//the verify object found int the db
