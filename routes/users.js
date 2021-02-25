@@ -8,19 +8,29 @@ const passport = require('passport');
 const nodemailer = require('nodemailer');
 const { ensureAuthenticated } = require("../config/auth.js");
 const { findByIdAndUpdate } = require('../models/user.js');
+const async = require("async");
+
+
+//Allows for the C-HUB logo be clicked on in login page
+//to go back to welcome page
+router.get('/welcome', (req, res) => {
+  res.render('welcome');
+});
+
 
 //login handle
 router.get('/login', (req, res) => {
   res.render('login');
 });
 
-//register handle
+//Renders the register page for access
 router.get('/register', (req, res) => {
   res.render('register');
 });
 
 //The handler for the the registeration of the page
 router.post('/register', (req, res) => {
+
   const { name, email, password, password2 } = req.body;//getting the data from the page
   let errors = []; //array that gathers errors to display to the user
 
@@ -53,7 +63,7 @@ router.post('/register', (req, res) => {
   if (errors.length > 0) {
     res.render('register', {
       errors: errors,
-      name: name,
+      username: username,
       email: email,
       password: password,
       password2: password2
@@ -64,22 +74,14 @@ router.post('/register', (req, res) => {
       email: email
     }).exec((err, user) => {
       if (user) {
-        errors.push({
-          msg: 'email already registered'
-        });
-        res.render('register', {
-          errors,
-          name,
-          email,
-          password,
-          password2
-        });
+        errors.push({ msg: 'email already registered' });
+        res.render('register', { errors, username, email, password, password2 });
 
       } else {
 
         //creating a new user for the db
         const newUser = new User({
-          name: name,
+          username: username,
           email: email,
           password: password,
         });
@@ -149,6 +151,7 @@ router.post('/register', (req, res) => {
   }
 });
 
+
 //handler for the user clicking their verification email
 router.get('/verify/:token', function(req, res) {
 
@@ -200,11 +203,163 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-//logout
+//Logout method
 router.get('/logout', (req, res) => {
   req.logout();
-  req.flash('success_msg', 'Now logged out');
+  req.flash('success_msg', 'You successfully logged out!');
   res.redirect('/users/login');
 });
+
+//Forgot Password
+router.get('/forgot', function (req, res) {
+  res.render('forgot');
+});
+
+//Goes to the forgot page and crypts the login email reset link
+router.post('/forgot', function (req, res, next) {
+  async.waterfall([
+    function (done) {
+      crypto.randomBytes(20, function (err, buf) {
+        var token = buf.toString('hex');
+        done(err, token);
+      });
+    },
+
+    //Checks if the account email exist before sending the data and redirects the page back
+    //to the forgot page
+    function (token, done) {
+      User.findOne({ email: req.body.email }, function (err, user) {
+        if (!user) {
+          req.flash('error', 'No account with that email address exists.');
+          return res.redirect('/forgot');
+        }
+
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+        user.save(function (err) {
+          done(err, token, user);
+        });
+      });
+    },
+
+    //Connects the smtpTransport for email services to send the email for forgot password links
+    function (token, user, done) {
+      var smtpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'chubservices@gmail.com',
+          pass: process.env.GMAILPW
+        }
+      });
+
+      //Sets up the basic email with the link to reset the password.
+      var mailOptions = {
+        to: user.email,
+        from: 'chubservices@gmail.com',
+        subject: 'C-HUB Password Reset',
+        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+          'http://' + req.headers.host + '/users/reset/' + token + '\n\n' +
+          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+      };
+
+      //This is an email success message that lets the user know the email has sent successfully
+      smtpTransport.sendMail(mailOptions, function (err) {
+        console.log('mail sent');
+        req.flash('success_msg', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+        done(err, 'done');
+      });
+    }
+  //This redirects the user to login after changing password
+  ], function (err) {
+    if (err) return next(err);
+    res.redirect('/users/login');
+  });
+});
+
+//This makes sure that the reset link is expired or not
+router.get('/reset/:token', function (req, res) {
+  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
+    if (!user) {
+      req.flash('error', 'Password reset token is invalid or has expired.');
+      return res.redirect('/users/forgot');
+    }
+    res.render('reset', { token: req.params.token });
+  });
+});
+
+//Handles the reset password request and allows for the user to change password
+router.post('/reset/:token', function (req, res) {
+  async.waterfall([
+    function (done) {
+      User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
+        if (!user) {
+          req.flash('error', 'Password reset token is invalid or has expired.');
+          return res.redirect('back');
+        }
+        //Shows in the console is recieving the right information after testing
+        console.log(req.body.password, '       ', req.body.confirm);
+
+        //Handles the change password with the schema
+        if (req.body.password === req.body.confirm) {
+          bcrypt.genSalt(10, (err, salt) =>
+            bcrypt.hash(req.body.password, salt,
+              (err, hash) => {
+                if (err) throw err;
+
+                //save password to hash
+                req.body.password = hash;
+                console.log(req.body.password, '       ', hash);
+                User.findByIdAndUpdate({ _id: user._id }, { "password": req.body.password }, function (err, result) {
+                  user.resetPasswordToken = undefined;
+                  user.resetPasswordExpires = undefined;
+
+                  if (err) {
+                    res.send(err)
+                  }
+                  else {
+                    req.login(user, function (err) {
+                      done(err, user);
+                    });
+                  }
+               
+                })
+              }));
+        }
+
+        else {
+          req.flash("error", "Passwords do not match.");
+          return res.redirect('back');
+        }
+      });
+    },
+    //This sends an email to the user when the password has been changed to notify them
+    function (user, done) {
+      var smtpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'chubservices@gmail.com',
+          pass: process.env.GMAILPW
+        }
+      });
+      var mailOptions = {
+        to: user.email,
+        from: 'chubservices@gmail.com',
+        subject: 'Your password has been changed',
+        text: 'Hello ' + user.username + ',\n\n' +
+          'This is a confirmation that the password for your account at ' + user.email + ' has just been changed.\n'
+      };
+      //Tells the user the password was successfuly changed and logs them into their account
+      smtpTransport.sendMail(mailOptions, function (err) {
+        req.flash('success_msg', 'Success! Your password has been changed.');
+        done(err);
+      });
+    }
+  ], function (err) {
+    res.redirect('/dashboard');
+  });
+});
+
 
 module.exports = router;

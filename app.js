@@ -6,6 +6,7 @@ const expressEjsLayout = require('express-ejs-layouts');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
+User = require("./models/user");
 
 //using the dotenv library for reading env files
 require('dotenv').config({ path: "./env" });
@@ -20,7 +21,9 @@ mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true, useUnified
   .catch((err) => console.log(err + ' thrown error'));
 
 
+
 //CSS linking
+
 app.use(express.static(__dirname + '/public'));
 
 //EJS
@@ -37,6 +40,14 @@ app.use(session({
   saveUninitialized: true
 }));
 
+// PASSPORT CONFIGURATION
+app.use(require("express-session")({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
