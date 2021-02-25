@@ -8,18 +8,22 @@ const flash = require('connect-flash');
 const passport = require('passport');
 User = require("./models/user");
 
-require('dotenv').config();
+//using the dotenv library for reading env files
+require('dotenv').config({ path: "./env" });
+
 //importing the passport config
 require("./config/passport")(passport);
 
 //mongoose
 //may need to configure the mongodb, unsure if this will work on a hosted server
 mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('connected,,'))
+  .then(() => console.log('connected,'))
   .catch((err) => console.log(err + ' thrown error'));
 
 
-//CSS linking 
+
+//CSS linking
+
 app.use(express.static(__dirname + '/public'));
 
 //EJS
@@ -31,7 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 
 //express session code
 app.use(session({
-  secret: 'secret',
+  secret: 'secretcoolsession',
   resave: true,
   saveUninitialized: true
 }));

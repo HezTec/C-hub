@@ -24,16 +24,20 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-
-  resetPasswordToken: {
+    resetPasswordToken: {
     type: String,
   },
 
   resetPasswordExpires: {
     type: Date,
+  },
+  
+  active: {
+    type: Boolean,
+    default: false
   }
 });
 
-UserSchema.plugin(passportLocalMongoose)
+UserSchema.plugin(passportLocalMongoose);
 
-var User = module.exports = mongoose.model('User', UserSchema);
+var User = module.exports = mongoose.model('User', UserSchema, 'userList');
