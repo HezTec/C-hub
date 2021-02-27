@@ -17,15 +17,25 @@
   },
   "homepage": "https://github.com/HezTec/C-hub#readme",
   "dependencies": {
+    "async": "^2.6.3",
     "bcrypt": "^5.0.0",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.14.1",
     "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
+    "env-cmd": "^10.1.0",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
+    "express-flash": "0.0.2",
     "express-session": "^1.17.1",
     "mongoose": "^5.11.15",
+    "nodemailer": "^6.4.18",
     "nodemon": "^2.0.7",
     "passport": "^0.4.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^3.1.0",
+    "request": "^2.65.0"
   }
 }

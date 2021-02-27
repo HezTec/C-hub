@@ -3,9 +3,13 @@ const router = express.Router();
 const app = express();
 const mongoose = require('mongoose');
 const expressEjsLayout = require('express-ejs-layouts');
-const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
+User = require("./models/user");
+
+
+//using the dotenv library for reading env files
+require('dotenv').config({ path: "./env" });
 
 //importing the passport config
 require("./config/passport")(passport);
@@ -13,8 +17,9 @@ require("./config/passport")(passport);
 //mongoose
 //may need to configure the mongodb, unsure if this will work on a hosted server
 mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('connected,,'))
+  .then(() => console.log('connected,'))
   .catch((err) => console.log(err + ' thrown error'));
+
 
 
 //CSS linking
@@ -27,13 +32,15 @@ app.use(expressEjsLayout);
 //BodyParser
 app.use(express.urlencoded({ extended: false }));
 
-//express session code
-app.use(session({
-  secret: 'secretcoolsession',
-  resave: true,
-  saveUninitialized: true
+
+// PASSPORT CONFIGURATION
+app.use(require("express-session")({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: false
 }));
 
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
