@@ -10,13 +10,11 @@ const { ensureAuthenticated } = require("../config/auth.js");
 const { findByIdAndUpdate } = require('../models/user.js');
 const async = require("async");
 
-
 //Allows for the C-HUB logo be clicked on in login page
 //to go back to welcome page
 router.get('/welcome', (req, res) => {
   res.render('welcome');
 });
-
 
 //login handle
 router.get('/login', (req, res) => {
@@ -31,12 +29,12 @@ router.get('/register', (req, res) => {
 //The handler for the the registeration of the page
 router.post('/register', (req, res) => {
 
-  const { name, email, password, password2 } = req.body;//getting the data from the page
+  const { username, email, password, password2 } = req.body; //getting the data from the page
   let errors = []; //array that gathers errors to display to the user
 
 
   //making sure all fields are entered
-  if (!name || !email || !password || !password2) {
+  if (!username || !email || !password || !password2) {
     errors.push({
       msg: "please fill in all fields"
     });
@@ -74,8 +72,16 @@ router.post('/register', (req, res) => {
       email: email
     }).exec((err, user) => {
       if (user) {
-        errors.push({ msg: 'email already registered' });
-        res.render('register', { errors, username, email, password, password2 });
+        errors.push({
+          msg: 'email already registered'
+        });
+        res.render('register', {
+          errors,
+          username,
+          email,
+          password,
+          password2
+        });
 
       } else {
 
@@ -93,7 +99,7 @@ router.post('/register', (req, res) => {
         const newVerifyToken = new VerifyToken({
           userID: newUser._id,
           verifyToken: genVerifyToken,
-          verifyTokenExpire: Date.now() + 3600000// 1 hour
+          verifyTokenExpire: Date.now() + 3600000 // 1 hour
         });
 
         //entering the new token to the collection & logging it to console
@@ -120,6 +126,7 @@ router.post('/register', (req, res) => {
               /*
                 sending the verification email to the user
               */
+
               let smtpTransport = nodemailer.createTransport({
                 service: 'Gmail',
                 auth: {
@@ -151,20 +158,19 @@ router.post('/register', (req, res) => {
   }
 });
 
-
 //handler for the user clicking their verification email
 router.get('/verify/:token', function(req, res) {
 
   //finding the verify token in the db
   VerifyToken.findOne({
     verifyToken: req.params.token
-  }).populate('userID').exec(function(err, verify) {//this function checks that the token was found and if not redirects to the login page
+  }).populate('userID').exec(function(err, verify) { //this function checks that the token was found and if not redirects to the login page
     if (!verify) {
       req.flash('error', 'verify token invalid');
       return res.redirect('/users/login');
     }
-    let filter = { _id: verify.userID._id };//getting the user that is referenced in the token db object
-    let update = { active: true };//changing the active parameter to true
+    let filter = { _id: verify.userID._id }; //getting the user that is referenced in the token db object
+    let update = { active: true }; //changing the active parameter to true
 
     //executing the update of the active parameter
     User.findByIdAndUpdate(filter, update, function(err, result) {
@@ -188,7 +194,7 @@ router.get('/verify/:token', function(req, res) {
     we could just send them to a page that says "congrats, you are now a verified user" or some shit
     */
     res.render('verify', {
-      verify: verify//the verify object found int the db
+      verify: verify //the verify object found int the db
     });
   });
 });
@@ -211,15 +217,15 @@ router.get('/logout', (req, res) => {
 });
 
 //Forgot Password
-router.get('/forgot', function (req, res) {
+router.get('/forgot', function(req, res) {
   res.render('forgot');
 });
 
 //Goes to the forgot page and crypts the login email reset link
-router.post('/forgot', function (req, res, next) {
+router.post('/forgot', function(req, res, next) {
   async.waterfall([
-    function (done) {
-      crypto.randomBytes(20, function (err, buf) {
+    function(done) {
+      crypto.randomBytes(20, function(err, buf) {
         var token = buf.toString('hex');
         done(err, token);
       });
@@ -227,32 +233,36 @@ router.post('/forgot', function (req, res, next) {
 
     //Checks if the account email exist before sending the data and redirects the page back
     //to the forgot page
-    function (token, done) {
-      User.findOne({ email: req.body.email }, function (err, user) {
+    function(token, done) {
+      User.findOne({
+        email: req.body.email
+      }, function(err, user) {
         if (!user) {
           req.flash('error', 'No account with that email address exists.');
-          return res.redirect('/forgot');
+          return res.redirect('forgot');
         }
 
         user.resetPasswordToken = token;
         user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-        user.save(function (err) {
+        user.save(function(err) {
           done(err, token, user);
         });
       });
     },
 
     //Connects the smtpTransport for email services to send the email for forgot password links
-    function (token, user, done) {
+    function(token, user, done) {
       var smtpTransport = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
           user: 'chubservices@gmail.com',
           pass: process.env.GMAILPW
+        },
+        tls: {
+          rejectUnauthorized: false
         }
       });
-
       //Sets up the basic email with the link to reset the password.
       var mailOptions = {
         to: user.email,
@@ -263,44 +273,52 @@ router.post('/forgot', function (req, res, next) {
           'http://' + req.headers.host + '/users/reset/' + token + '\n\n' +
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
-
       //This is an email success message that lets the user know the email has sent successfully
-      smtpTransport.sendMail(mailOptions, function (err) {
+      smtpTransport.sendMail(mailOptions, function(err) {
         console.log('mail sent');
         req.flash('success_msg', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
         done(err, 'done');
       });
     }
-  //This redirects the user to login after changing password
-  ], function (err) {
+    //This redirects the user to login after changing password
+  ], function(err) {
     if (err) return next(err);
     res.redirect('/users/login');
   });
 });
 
 //This makes sure that the reset link is expired or not
-router.get('/reset/:token', function (req, res) {
-  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
+router.get('/reset/:token', function(req, res) {
+  User.findOne({
+    resetPasswordToken: req.params.token,
+    resetPasswordExpires: {
+      $gt: Date.now()
+    }
+  }, function(err, user) {
     if (!user) {
       req.flash('error', 'Password reset token is invalid or has expired.');
       return res.redirect('/users/forgot');
     }
-    res.render('reset', { token: req.params.token });
+    res.render('reset', {
+      token: req.params.token
+    });
   });
 });
 
 //Handles the reset password request and allows for the user to change password
-router.post('/reset/:token', function (req, res) {
+router.post('/reset/:token', function(req, res) {
   async.waterfall([
-    function (done) {
-      User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
+    function(done) {
+      User.findOne({
+        resetPasswordToken: req.params.token,
+        resetPasswordExpires: {
+          $gt: Date.now()
+        }
+      }, function(err, user) {
         if (!user) {
           req.flash('error', 'Password reset token is invalid or has expired.');
           return res.redirect('back');
         }
-        //Shows in the console is recieving the right information after testing
-        console.log(req.body.password, '       ', req.body.confirm);
-
         //Handles the change password with the schema
         if (req.body.password === req.body.confirm) {
           bcrypt.genSalt(10, (err, salt) =>
@@ -310,37 +328,40 @@ router.post('/reset/:token', function (req, res) {
 
                 //save password to hash
                 req.body.password = hash;
-                console.log(req.body.password, '       ', hash);
-                User.findByIdAndUpdate({ _id: user._id }, { "password": req.body.password }, function (err, result) {
-                  user.resetPasswordToken = undefined;
-                  user.resetPasswordExpires = undefined;
+                User.findByIdAndUpdate({
+                  _id: user._id
+                }, {
+                    "password": req.body.password
+                  }, function(err, result) {
+                    result.resetPasswordToken = undefined;
+                    result.resetPasswordExpires = undefined;
+                    result.save();
 
-                  if (err) {
-                    res.send(err)
-                  }
-                  else {
-                    req.login(user, function (err) {
-                      done(err, user);
-                    });
-                  }
-               
-                })
+                    if (err) {
+                      res.send(err)
+                    } else {
+                      req.login(user, function(err) {
+                        done(err, user);
+                      });
+                    }
+                  })
               }));
-        }
-
-        else {
+        } else {
           req.flash("error", "Passwords do not match.");
           return res.redirect('back');
         }
       });
     },
     //This sends an email to the user when the password has been changed to notify them
-    function (user, done) {
-      var smtpTransport = nodemailer.createTransport({
+    function(user, done) {
+      let smtpTransport = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
           user: 'chubservices@gmail.com',
           pass: process.env.GMAILPW
+        },
+        tls: {
+          rejectUnauthorized: false
         }
       });
       var mailOptions = {
@@ -351,12 +372,12 @@ router.post('/reset/:token', function (req, res) {
           'This is a confirmation that the password for your account at ' + user.email + ' has just been changed.\n'
       };
       //Tells the user the password was successfuly changed and logs them into their account
-      smtpTransport.sendMail(mailOptions, function (err) {
+      smtpTransport.sendMail(mailOptions, function(err) {
         req.flash('success_msg', 'Success! Your password has been changed.');
-        done(err);
+        done(err, 'done');
       });
     }
-  ], function (err) {
+  ], function(err) {
     res.redirect('/dashboard');
   });
 });

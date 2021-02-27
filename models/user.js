@@ -24,14 +24,14 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-    resetPasswordToken: {
+  resetPasswordToken: {
     type: String,
   },
 
   resetPasswordExpires: {
     type: Date,
   },
-  
+
   active: {
     type: Boolean,
     default: false
