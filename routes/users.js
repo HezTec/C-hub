@@ -66,15 +66,24 @@ router.post('/register', (req, res) => {
       password: password,
       password2: password2
     });
+
+
   } else {
+
     //password validation passed, now below code checks to see if user has already been registered
-    User.findOne({
-      email: email
-    }).exec((err, user) => {
-      if (user) {
-        errors.push({
-          msg: 'email already registered'
-        });
+    //this query below ensures that the username and email entered are unique
+    User.find({ $or: [{ email: email }, { username: username }] }).exec((err, user) => {
+      if (user.length > 0) {
+
+        //checking which values were found in the database to print the error
+        for (var i = 0; i < user.length; i++) {
+          if (user[i].username == username) {
+            errors.push({ msg: 'username taken' });
+          }
+          if (user[i].email == email) {
+            errors.push({ msg: 'email already registered' });
+          }
+        }
         res.render('register', {
           errors,
           username,
