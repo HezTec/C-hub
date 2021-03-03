@@ -8,8 +8,15 @@ module.exports = function(passport) {
       //match the user
       User.findOne({ email: email })
         .then((user) => {
+
+          //checks if email isnt in the DB
           if (!user) {
             return done(null, false, { message: 'That email is not registered' });
+          }
+
+          //checks if the user has clicked the email verification link and if not stops them from logging in
+          if (user.active == false) {
+            return done(null, false, { message: 'Please verify your email to log in' });
           }
 
           //match the password
@@ -26,6 +33,7 @@ module.exports = function(passport) {
         .catch((err) => { console.log(err) });
     })
   );
+
 
   passport.serializeUser(function(user, done) {
     done(null, user.id);

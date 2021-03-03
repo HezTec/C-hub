@@ -6,6 +6,7 @@ mongoose.set('useFindAndModify', false);
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
+    unique: true,
     required: true
   },
 
@@ -35,6 +36,11 @@ const UserSchema = new mongoose.Schema({
   active: {
     type: Boolean,
     default: false
+  },
+
+  testPhrase: {
+    type: String,
+    default: 'this is the test string'
   }
 });
 
