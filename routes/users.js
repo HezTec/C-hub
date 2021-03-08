@@ -1,3 +1,7 @@
+/**
+  routing file to handle basic user functions such as login and register
+*/
+
 const express = require('express');
 const router = express.Router();
 const User = require("../models/user.js");
@@ -6,15 +10,8 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 const nodemailer = require('nodemailer');
-const { ensureAuthenticated } = require("../config/auth.js");
 const { findByIdAndUpdate } = require('../models/user.js');
 const async = require("async");
-
-//Allows for the C-HUB logo be clicked on in login page
-//to go back to welcome page
-router.get('/welcome', (req, res) => {
-  res.render('welcome');
-});
 
 //login handle
 router.get('/login', (req, res) => {
