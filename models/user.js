@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 var passportLocalMongoose = require("passport-local-mongoose");
 
 mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -40,7 +41,7 @@ const UserSchema = new mongoose.Schema({
 
   testPhrase: {
     type: String,
-    default: 'this is the test string'
+    default: 'Verfied Test String'
   }
 });
 

@@ -1,4 +1,103 @@
+<!DOCTYPE html>
 <html>
-<h1>Welcome!</h1>
-<p> <%= user.testPhrase %> </p>
+<%- include ('./partials/messages') %>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - C-Hub</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="/css/Growing-Search-Bar-Animated-Text-Input.css">
+    <link rel="stylesheet" href="/css/Search-Input-responsive.css">
+</head>
+
+<body id="page-top">
+    <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
+        <a href='dashboard'><div class="container"><img src="/img/C-hub%20(3).png"></a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
+                <div class="d-flex justify-content-center h-100">
+                    <form action="dashboard" method="post">
+                    <div class="searchbar"><input type="text" name="username" class="search_input" placeholder="Search..."><button class="search_icon" type="sumbit"><i class="fas fa-search"></i></button></div>
+                    </form>
+                </div>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" href="#contact">Contact</a></li>
+                    <li class="nav-item"></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"></li>
+                    <li class="nav-item"><a class="nav-link" href="/users/logout">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/users/forgot">Edit Password</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <header class="masthead" style="background-image:url('/img/intro-bg.jpg');">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <img style = "border-radius: 50%;" src="/img/avatar.jpg">
+                        <h1 class="brand-heading" style = "margin-bottom:auto"><%= user.username %></h1>
+                        <p><%= user.testPhrase %></p><p class="intro-text">Bio for people to see</p><a class="btn btn-link btn-circle" 
+                        role="button" href="#about"><i class="fa fa-angle-double-down animated"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="text-center content-section" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2><p>Media Content</p></h2>
+                    <iframe width="420" height="315"
+                    src="https://www.youtube.com/embed/_zZ7fIkpBgs">
+                    </iframe>
+                    <iframe style="margin-top:10px" width="420" height="315"
+                    src="https://www.youtube.com/embed/zsJpUCWfyPE">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="text-center download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');"></section>
+    <section class="text-center content-section" id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2>Social Networks</h2>
+                    <ul class="list-inline banner-social-buttons">
+                        <li class="list-inline-item">&nbsp;</li>
+                        <li class="list-inline-item">&nbsp;<a class="btn btn-primary btn-lg btn-default" style="margin:10px;" target="_blank" type="button" href="https://twitter.com/"><i class="fa fa-twitter fa-fw"></i><span class="network-name">&nbsp;Twitter</span></a>
+                        <li class="list-inline-item">&nbsp;<a class="btn btn-primary btn-lg btn-default" style="margin:10px;" target="_blank" type="button" href="https://www.twitch.tv/"></i><span class="network-name">&nbsp;Twitch</span></a>
+                        <li class="list-inline-item">&nbsp;<a class="btn btn-primary btn-lg btn-default" style="margin:10px;" target="_blank" type="button" href="https://www.youtube.com/"></i><span class="network-name">&nbsp;Youtube</span></a>
+                        <li class="list-inline-item">&nbsp;</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="map-clean"></div>
+    <footer>
+        <div class="container text-center">
+            <p>Copyright ©&nbsp;C-Hub 2021</p>
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="/js/grayscale.js"></script>
+</body>
+
 </html>

@@ -20,8 +20,6 @@ mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true, useUnified
   .then(() => console.log('connected,'))
   .catch((err) => console.log(err + ' thrown error'));
 
-
-
 //CSS linking
 app.use(express.static(__dirname + '/public'));
 
