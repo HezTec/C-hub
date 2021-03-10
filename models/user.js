@@ -41,7 +41,7 @@ const UserSchema = new mongoose.Schema({
 
   testPhrase: {
     type: String,
-    default: 'Verfied Test String'
+    default: 'Verified Test String'
   }
 });
 

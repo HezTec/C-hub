@@ -1,5 +1,10 @@
 <html>
-<%- include ('./partials/messages') %>    
+<%- include ('./partials/messages') %>
 <h1>Welcome!</h1>
+
+<% if (errors.length == 0) { %>
+ <a type = "button" href = "/profile/<%= username %>" ><%= username %></a>
+<% } %>
+
 <p> Hello, this is the search page!</p>
 </html>

@@ -32,26 +32,30 @@ router.post('/dashboard', (req, res) => {
 	} else {
 
 	User.find({ username: username }).exec((err, user) => {
-		if (user.length > 0) {
+		console.log(username);
+		console.log(user);
+		
+		if (user == 0) {
 			//checking which values were found in the database to print the error in order to see if search bar is catching data
-			for (var i = 0; i < user.length; i++) {
-				if (user[i].username == username) {
-					errors.push({ msg: 'Username Found! :)' });
-					console.log("Username Found!");
-				} 
-				if (user[i].username !== username ) {
-					errors.push({ msg: 'Username Not Found.. :(' });
-					console.log("Username Not Found!");
-				}
-			}
+			console.log("hi");
+			errors.push({ msg: 'Username Not Found.. :(' });
+			console.log("Username Not Found!");
 			res.render('searchUser', {
-				errors,
-				username
+				errors
 			});
+
+		} else {
+			for (var i = 0; i < user.length; i++) {
+				console.log("Username Found!");
+				console.log(errors);
+				res.render('searchUser', {
+					errors,
+					username
+				});
+			}
 		}
 	});
 	}
 });
-
 
 module.exports = router;
