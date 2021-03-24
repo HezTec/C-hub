@@ -61,7 +61,6 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 				
 			}
 			else{
-				console.log("fuckmecunt")
 				user.urls.pull({title:inTitle, url: inLink});
 				user.save();
 			}
