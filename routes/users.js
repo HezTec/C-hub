@@ -122,7 +122,9 @@ router.post('/register', (req, res) => {
               newUser.save()
                 .then((value) => {
                   req.flash('success_msg', 'you have now registered, please check your email for a verification link!');
-                  res.redirect('/users/login');
+                  req.session.save(function () {
+                    res.redirect('/users/login');
+                  });
                 }).catch(value => console.log(value));
 
               /*
@@ -215,7 +217,10 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success_msg', 'You successfully logged out!');
-  res.redirect('/users/login');
+  req.session.save(function () {
+    res.redirect('/users/login');
+    return false;
+  });
 });
 
 //Forgot Password

@@ -30,14 +30,13 @@ router.post('/dashboard', (req, res) => {
 		});
 
 	} else {
-
-	User.find({ username: username }).exec((err, user) => {
+		//This finds the user through case insenstive search, but doesnt change the link
+		User.find({ username: new RegExp(username ,'i')}).exec((err, user) => {
 		console.log(username);
 		console.log(user);
-		
+	
 		if (user == 0) {
 			//checking which values were found in the database to print the error in order to see if search bar is catching data
-			console.log("hi");
 			errors.push({ msg: 'Username Not Found.. :(' });
 			console.log("Username Not Found!");
 			res.render('searchUser', {
@@ -47,10 +46,9 @@ router.post('/dashboard', (req, res) => {
 		} else {
 			for (var i = 0; i < user.length; i++) {
 				console.log("Username Found!");
-				console.log(errors);
-				res.render('searchUser', {
+				return res.render('searchUser', {
 					errors,
-					username
+					user, username
 				});
 			}
 		}
