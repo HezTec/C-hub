@@ -61,7 +61,6 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 				
 			}
 			else{
-				console.log("fuckmecunt")
 				user.urls.pull({title:inTitle, url: inLink});
 				user.save();
 			}
@@ -85,7 +84,6 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 // test.onclick = deleteEntry();
 
 function deleteEntry(){
-	console.log("cunt");
 	//req.user._id.urls.splice(index,1);
 };	
 
