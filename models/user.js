@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+require('mongoose-type-url');
 var passportLocalMongoose = require("passport-local-mongoose");
 
 mongoose.set('useFindAndModify', false);
@@ -41,7 +42,18 @@ const UserSchema = new mongoose.Schema({
   testPhrase: {
     type: String,
     default: 'this is the test string'
-  }
+  },
+
+  // links: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Link"
+  // },
+
+  urls: [{
+    title: String,
+    url: mongoose.SchemaTypes.Url
+  }]
+
 });
 
 UserSchema.plugin(passportLocalMongoose);
