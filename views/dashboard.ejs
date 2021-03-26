@@ -17,7 +17,7 @@
 
 <body id="page-top">
     <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
-        <div class="container"><img src="/img/C-hub%20(3).png"><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
+        <a href='/'><div class="container"><img src="/img/C-hub%20(3).png"></a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
                 <div class="d-flex justify-content-center h-100">
@@ -47,6 +47,9 @@
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
                         <h1 class="brand-heading">Welcome <%= user.username %>!</h1>
+                        <% if (user.admin == true){ %>
+                        <p>this is an admin account</p>
+                        <% } %>
                         <p class="intro-text">All of your favorite content. All in one place.</p><a class="btn btn-link btn-circle" role="button" href="#about"><i class="fa fa-angle-double-down animated"></i></a>
                     </div>
                 </div>

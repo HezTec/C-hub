@@ -5,7 +5,8 @@ const { ensureAuthenticated } = require("../config/auth.js");
 //login page
 
 router.get('/', (req, res) => {
-	res.render('welcome');
+	//sending data to tell if the user is logged in
+	res.render('welcome', { auth_info: req.isAuthenticated() });
 });
 
 
