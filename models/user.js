@@ -39,6 +39,11 @@ const UserSchema = new mongoose.Schema({
     default: false
   },
 
+  admin: {
+    type: Boolean,
+    default: false
+  },
+
   testPhrase: {
     type: String,
     default: 'Verified Test String'

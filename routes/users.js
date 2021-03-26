@@ -1,3 +1,7 @@
+/**
+  routing file to handle basic user functions such as login and register
+*/
+
 const express = require('express');
 const router = express.Router();
 const User = require("../models/user.js");

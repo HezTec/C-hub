@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <%- include ('./partials/messages') %>
 <head>
     <meta charset="utf-8">
@@ -13,6 +14,8 @@
     <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="/css/Growing-Search-Bar-Animated-Text-Input.css">
     <link rel="stylesheet" href="/css/Search-Input-responsive.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src=/js/funcs.js></script>
 </head>
 
 <body id="page-top">
@@ -90,6 +93,20 @@
     </section>
     <div class="map-clean"></div>
     <footer>
+        <p>report user</p>
+        <form id="myForm">
+          <label for="reason">reason:</label><br>
+          <select id="reason" name="reason">
+            <option value="Leads to bad website">Leads to bad website</option>
+            <option value="Misleading link">Misleading link</option>
+            <option value="Unacceptable profanity in link name">Unacceptable profanity in link name</option>
+            <option value="Other">Other</option>
+          </select><br>
+          <label>comment:</label><br>
+          <input type="text" id="comment" name="comment">
+          <input type="hidden" id="username" name="username" value=<%= user.username%> />
+          <input id='button' type="submit" value="Submit">
+        </form>
         <div class="container text-center">
             <p>Copyright ©&nbsp;C-Hub 2021</p>
         </div>
@@ -99,5 +116,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
     <script src="/js/grayscale.js"></script>
 </body>
+
 
 </html>
