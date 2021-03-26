@@ -47,6 +47,9 @@
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
                         <h1 class="brand-heading">Welcome <%= user.username %>!</h1>
+                        <% if (user.admin == true){ %>
+                        <p>this is an admin account</p>
+                        <% } %>
                         <p class="intro-text">All of your favorite content. All in one place.</p><a class="btn btn-link btn-circle" role="button" href="#about"><i class="fa fa-angle-double-down animated"></i></a>
                     </div>
                 </div>

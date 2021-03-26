@@ -1,4 +1,24 @@
 <html>
+
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src=/js/funcs.js></script>
+</head>
 <h1>Welcome!</h1>
 <p> <%= user.testPhrase %> </p>
+<p>report user</p>
+<form id="myForm">
+  <label for="reason">reason:</label><br>
+  <select id="reason" name="reason">
+    <option value="Leads to bad website">Leads to bad website</option>
+    <option value="Misleading link">Misleading link</option>
+    <option value="Unacceptable profanity in link name">Unacceptable profanity in link name</option>
+    <option value="Other">Other</option>
+  </select><br>
+  <label>comment:</label><br>
+  <input type="text" id="comment" name="comment">
+  <input type="hidden" id="username" name="username" value=<%= user.username%> />
+  <input id='button' type="submit" value="Submit">
+</form>
+
 </html>
