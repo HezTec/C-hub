@@ -1,7 +1,9 @@
-<!DOCTYPE html>
 <html>
-    <%- include ('./partials/messages') %>
+
 <head>
+    <%- include ('./partials/messages') %>
+    <script type="text/javascript" src="/js/funcs.js"></script>
+        
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Home - C-Hub</title>
@@ -15,6 +17,33 @@
     <link rel="stylesheet" href="/css/Search-Input-responsive.css">
 </head>
 
+<script> 
+    function myFunction() {
+            //document.getElementById("linkForm").hidden = toggle;
+
+            if (document.getElementById("linkForm").hidden == true){
+                document.getElementById("linkForm").hidden = false;
+            }
+            else{
+                document.getElementById("linkForm").hidden = true;
+            }
+        }
+
+    function editProf() {
+        //document.getElementById("linkForm").hidden = toggle;
+
+        if (document.getElementById("linkBtn").hidden == true){
+            document.getElementById("linkBtn").hidden = false;
+        }
+        else{
+            document.getElementById("linkBtn").hidden = true;
+        }
+    }
+</script>
+
+
+
+
 <body id="page-top">
     <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
         <a href='/'><div class="container"><img src="/img/C-hub%20(3).png"></a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
@@ -26,8 +55,12 @@
                     </form>
                 </div>
                 <ul class="navbar-nav ml-auto">
+
+                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" onclick="editProf()">Edit</a></li>
+                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#contact">contact</a></li>
                     <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" href="#about">About</a></li>
                     <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/profile/<%= user.username %>">Profile</a></li>
+
                     <li class="nav-item"></li>
                 </ul>
                 <ul class="navbar-nav">
@@ -48,6 +81,41 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
+
+                        <h3 class="brand-heading">Welcome <%= user.username %>!</h3>
+                        
+                    <button onclick="myFunction()" id="linkBtn" hidden='true'> Add a link </button>
+
+
+                    <div class = "linkInput">
+                        <form action="/dashboard" method="post" id="linkForm" hidden>
+                            <input type="text" name="title" id="title" placeholder="Title">
+                            <input type="url" name="url" id="url" placeholder="Link">
+                            <button type = "submit" value="Submit" >Submit</button>
+                        </form>
+                    </div>
+
+
+                    <br>
+
+                    <%
+                    <!-- Display added link to profile.ejs? -->
+                    
+                    <!-- <form action="/dashboard" method="post" id='remove-btn'>  -->
+
+                        <!-- Here, try to see if passing user.urls object id back to the backend will allow it to be removed? -->
+                    <div class="container">
+                    <% for( let index = 0; index < user.urls.length; index++ ) { %>
+                        <!-- onclick="deleteEntry('<%# user._id %>','<%# user.urls[index].title %>', '<%# user.urls[index].url %>' -->
+                        <!-- FIX LATER: <button frommethod = "post" formaction="/dashboard" id = "jeff">remove{icon}</button> -->
+                        <div class="row">
+                            <div class= "col-md-12">
+                                <br><a href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
+                            </div>
+                        </div>       
+                    <% } %>
+                    
+                    </div>
                         <h1 class="brand-heading">Welcome <%= user.username %>!</h1>
                         <% if (user.admin == true){ %>
                         <p>this is an admin account</p>
@@ -58,34 +126,7 @@
             </div>
         </div>
     </header>
-    <section class="text-center content-section" id="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2>About C-Hub</h2>
-                    <p>Content-Hub is a system for users to advertise their social media content as well as provide a hub for their content to be collected in one place.
-                         This allows for a more connected audience for the content creators and allows fans to be able to find all of their favorite content creators information in one place. </p>
-                </div>
-            </div>
-        </div>
-    </section>
     <section class="text-center download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');"></section>
-    <section class="text-center content-section" id="contact">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2>Contact us</h2>
-                    <p>Feel free to leave us a comment on twitter to give some feedback about this.</p>
-                    <ul class="list-inline banner-social-buttons">
-                        <li class="list-inline-item">&nbsp;</li>
-                        <li class="list-inline-item">&nbsp;<a class="btn btn-primary btn-lg btn-default" style="margin:10px;" target="_blank" type="button" href="https://twitter.com/ContentHub11"><i class="fa fa-twitter fa-fw"></i><span class="network-name">&nbsp;Twitter</span></a>
-                            <a class="btn btn-primary btn-lg btn-default" type="button" href="mailto:chubservices@gmail.com.com?subject=Feedback"><span class="network-name">&nbsp;Contact us</span></a></li>
-                        <li class="list-inline-item">&nbsp;</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
     <div class="map-clean"></div>
     <footer>
         <div class="container text-center">
