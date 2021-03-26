@@ -75,10 +75,10 @@ router.post('/register', (req, res) => {
         //checking which values were found in the database to print the error
         for (var i = 0; i < user.length; i++) {
           if (user[i].username == username) {
-            errors.push({ msg: 'username taken' });
+            errors.push({ msg: 'Username is taken' });
           }
           if (user[i].email == email) {
-            errors.push({ msg: 'email already registered' });
+            errors.push({ msg: 'Email already registered' });
           }
         }
         res.render('register', {
@@ -126,7 +126,9 @@ router.post('/register', (req, res) => {
               newUser.save()
                 .then((value) => {
                   req.flash('success_msg', 'you have now registered, please check your email for a verification link!');
-                  res.redirect('/users/login');
+                  req.session.save(function () {
+                    res.redirect('/users/login');
+                  });
                 }).catch(value => console.log(value));
 
               /*
@@ -151,11 +153,11 @@ router.post('/register', (req, res) => {
                 text: 'Welcome to Content-Hub, you are one step away from completing your signup.\n\n' +
                   'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
                   'http://' + req.headers.host + '/users/verify/' + genVerifyToken + '\n\n' +
-                  'If this wasn\'t you please contact chubservices@gamil.com for help.\n'
+                  'If this wasn\'t you please contact chubservices@gmail.com for help.\n'
               };
               //sending the mail
               smtpTransport.sendMail(mailOptions, function(err) {
-                console.log('mail sent');
+                console.log('Mail Sent!');
               });
 
             }));
@@ -219,7 +221,10 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success_msg', 'You successfully logged out!');
-  res.redirect('/users/login');
+  req.session.save(function () {
+    res.redirect('/users/login');
+    return false;
+  });
 });
 
 //Forgot Password
