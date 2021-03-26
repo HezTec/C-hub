@@ -4,8 +4,8 @@
 
 <head>
     <%- include ('./partials/messages') %>
-    <script type="text/javascript" src="/js/funcs.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="/js/funcs.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Home - C-Hub</title>
@@ -20,7 +20,7 @@
 
 </head>
 
-<script> 
+<script>
     function myFunction() {
             //document.getElementById("linkForm").hidden = toggle;
 
@@ -46,11 +46,11 @@
 
 <body id="page-top">
     <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
-        <a href='/dashboard'><div class="container"><img src="/img/C-hub%20(3).png"></a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
+        <a href='/'><div class="container"><img src="/img/C-hub%20(3).png"></a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
                 <div class="d-flex justify-content-center h-100">
-                    <form action="/dashboard" method="post">
+                    <form action="/search" method="post">
                     <div class="searchbar"><input type="text" name="username" class="search_input" placeholder="Search..."><button class="search_icon" type="sumbit"><i class="fas fa-search"></i></button></div>
                     </form>
                 </div>
@@ -78,35 +78,31 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
-
-                        <h3 class="brand-heading"> <%= user.username %>!</h3>
-
                     <br>
-
-                    
-                    <!-- Display added link to profile.ejs? -->
-                    
-                    <!-- <form action="/dashboard" method="post" id='remove-btn'>  -->
-
-                        <!-- Here, try to see if passing user.urls object id back to the backend will allow it to be removed? -->
-                    <div class="container">
-                    <% for( let index = 0; index < user.urls.length; index++ ) { %>
-                        <!-- onclick="deleteEntry('<%# user._id %>','<%# user.urls[index].title %>', '<%# user.urls[index].url %>' -->
-                        <!-- FIX LATER: <button frommethod = "post" formaction="/dashboard" id = "jeff">remove{icon}</button> -->
-                        <div class="row">
-                            <div class= "col-md-12">
-                                <br><a href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
-                            </div>
-                        </div>
-                            
-                        
-                    <% } %>
-                    </div>
 
                         <img style = "border-radius: 50%;" src="/img/avatar.jpg">
                         <h1 class="brand-heading" style = "margin-bottom:auto"><%= user.username %></h1>
-                        <p><%= user.testPhrase %></p><p class="intro-text">Bio for people to see</p><a class="btn btn-link btn-circle" 
+                        <p><%= user.testPhrase %></p><p class="intro-text">Bio for people to see</p><a class="btn btn-link btn-circle"
                         role="button" href="#about"><i class="fa fa-angle-double-down animated"></i></a>
+
+                        <!-- Display added link to profile.ejs? -->
+
+                        <!-- <form action="/dashboard" method="post" id='remove-btn'>  -->
+
+                            <!-- Here, try to see if passing user.urls object id back to the backend will allow it to be removed? -->
+                        <div class="container">
+                        <% for( let index = 0; index < user.urls.length; index++ ) { %>
+                            <!-- onclick="deleteEntry('<%# user._id %>','<%# user.urls[index].title %>', '<%# user.urls[index].url %>' -->
+                            <!-- FIX LATER: <button frommethod = "post" formaction="/dashboard" id = "jeff">remove{icon}</button> -->
+                            <div class="row">
+                                <div class= "col-md-12">
+                                    <br><a href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
+                                </div>
+                            </div>
+
+
+                        <% } %>
+                        </div>
 
                     </div>
                 </div>
@@ -115,7 +111,7 @@
     </header>
 
     <section class="text-center content-section" id="about">
-        <div class="container">
+        <!-- <div class="container">
             <div class="row">
                 <div class="col-lg-8 mx-auto">
                     <h2><p>Media Content</p></h2>
@@ -127,7 +123,7 @@
                     </iframe>
                 </div>
             </div>
-        </div>
+        </div> -->
     </section>
     <section class="text-center download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');"></section>
     <section class="text-center content-section" id="contact">
@@ -148,8 +144,9 @@
     </section>
     <div class="map-clean"></div>
     <footer>
+
         <p>report user</p>
-        <form id="myForm">
+        <form id="myForm" action="<%=user.username%>/report" method="post">
           <label for="reason">reason:</label><br>
           <select id="reason" name="reason">
             <option value="Leads to bad website">Leads to bad website</option>
@@ -159,9 +156,10 @@
           </select><br>
           <label>comment:</label><br>
           <input type="text" id="comment" name="comment">
-          <input type="hidden" id="username" name="username" value=<%= user.username%> />
+          <input type="hidden" id="username" name="username" value="<%= user.username%>" />
           <input id='button' type="submit" value="Submit">
         </form>
+
         <div class="container text-center">
             <p>Copyright ©&nbsp;C-Hub 2021</p>
         </div>
@@ -174,4 +172,3 @@
 
 
 </html>
-
