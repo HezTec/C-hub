@@ -3,6 +3,7 @@ require('mongoose-type-url');
 var passportLocalMongoose = require("passport-local-mongoose");
 
 mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -39,20 +40,21 @@ const UserSchema = new mongoose.Schema({
     default: false
   },
 
+  admin: {
+    type: Boolean,
+    default: false
+  },
+
   testPhrase: {
     type: String,
     default: 'this is the test string'
   },
 
-  // links: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "Link"
-  // },
-
   urls: [{
     title: String,
     url: mongoose.SchemaTypes.Url
   }]
+
 
 });
 
