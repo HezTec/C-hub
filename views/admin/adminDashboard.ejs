@@ -1,0 +1,25 @@
+<html>
+
+<head>
+    <%- include ('../partials/messages') %>
+</head>
+<h1>Admin Dashboard</h1>
+<p>Welcome <%=user.username%></p><br>
+<p>Add admin</p>
+<form action="admin/add" method="post">
+  <label for="reason">Admin Email:</label><br>
+  <input type="text" id=newAdminEmail name="newAdminEmail"></input><br>
+  <input id='button' type="submit" value="Submit">
+</form>
+<% if(user._id == '6059336ccffd2d2ca0fce555'){%>
+
+  <p>Delete admin</p>
+  <form action="admin/delete" method="post">
+    <label for="reason">Admin Email:</label><br>
+    <input type="text" id=newAdminEmail name="newAdminEmail"></input><br>
+    <input id='button' type="submit" value="Submit">
+  </form>
+  <%}%>
+
+  <a href="admin/reports"><p>Highly reported users</p></a>
+</html>

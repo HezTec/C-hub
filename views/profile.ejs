@@ -96,7 +96,7 @@
                             <!-- FIX LATER: <button frommethod = "post" formaction="/dashboard" id = "jeff">remove{icon}</button> -->
                             <div class="row">
                                 <div class= "col-md-12">
-                                    <br><a href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
+                                    <br><a href="<%=user.urls[index].url%>" value="<%=index%>"><%=user.urls[index].title%></a>
                                 </div>
                             </div>
 
@@ -149,8 +149,8 @@
         <form id="myForm" action="<%=user.username%>/report" method="post">
           <label for="reason">reason:</label><br>
           <select id="reason" name="reason">
-            <option value="Leads to bad website">Leads to bad website</option>
             <option value="Misleading link">Misleading link</option>
+            <option value="Inappropriate profile picture">Inappropriate profile picture</option>
             <option value="Unacceptable profanity in link name">Unacceptable profanity in link name</option>
             <option value="Other">Other</option>
           </select><br>

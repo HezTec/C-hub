@@ -1,0 +1,12 @@
+<html>
+<%- include ('../partials/messages') %>
+<h1>User Reports</h1>
+
+    <% for (let index = 0; index < reports.length; index++) { %>
+       <br> <a type = "button" href = "/profile/<%= reports[index].userID.username %>" ><%= reports[index].userID.username %></a>
+       <form action="deleteUser/<%=reports[index].userID._id%>" method="post">
+       <button input type="submit">Delete</button>
+       </form>
+    <% } %>
+
+</html>
