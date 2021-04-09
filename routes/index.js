@@ -66,8 +66,6 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 	User.findById(req.user._id, function(err,user){
 		if(err){
 			console.log(err)
-<<<<<<< HEAD
-=======
 		}else{
 			// $push: {urls: { title: inTitle, url: inLink};
 			if(inTitle == null || inLink == null){
@@ -77,7 +75,6 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 				user.urls.pull({title:inTitle, url: inLink});
 				user.save();
 			}
->>>>>>> 802c937e3ac250c1d9c38a1c7172da60d831c49b
 		}
 	}).updateOne(
 		{},
@@ -115,11 +112,7 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 });
 
 //Search for user
-<<<<<<< HEAD
-router.post('/search', (req, res) => {
-=======
-router.post('/dashboard', (req, res) => {
->>>>>>> 802c937e3ac250c1d9c38a1c7172da60d831c49b
+router.post('/searchUser', (req, res) => {
 	const { username } = req.body;
 	let errors = [];
 
@@ -131,7 +124,6 @@ router.post('/dashboard', (req, res) => {
 
 	} else {
 		//This finds the user through case insenstive search, but doesnt change the link
-<<<<<<< HEAD
 		User.find({ username: new RegExp(username, 'i') }).exec((err, user) => {
 			console.log(username);
 			console.log(user);
@@ -154,43 +146,7 @@ router.post('/dashboard', (req, res) => {
 				}
 			}
 		});
-=======
-		User.find({ username: new RegExp(username ,'i')}).exec((err, user) => {
-		console.log(username);
-		console.log(user);
-	
-		if (user == 0) {
-			//checking which values were found in the database to print the error in order to see if search bar is catching data
-			errors.push({ msg: 'Username Not Found.. :(' });
-			console.log("Username Not Found!");
-			res.render('searchUser', {
-				errors
-			});
-
-		} else {
-			for (var i = 0; i < user.length; i++) {
-				console.log("Username Found!");
-				return res.render('searchUser', {
-					errors,
-					user, username
-				});
-			}
-		}
-	});
->>>>>>> 802c937e3ac250c1d9c38a1c7172da60d831c49b
 	}
 });
-
-// var test = document.getElementById('jeff');
-// test.onclick = deleteEntry();
-
-<<<<<<< HEAD
-function deleteEntry() {
-=======
-function deleteEntry(){
->>>>>>> 802c937e3ac250c1d9c38a1c7172da60d831c49b
-	//req.user._id.urls.splice(index,1);
-};
-
 
 module.exports = router;

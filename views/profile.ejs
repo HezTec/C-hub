@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html>
-
-
 <head>
     <%- include ('./partials/messages') %>
     <script type="text/javascript" src="/js/funcs.js"></script>
@@ -22,8 +20,8 @@
 
 <script> 
     function myFunction() {
+        
             //document.getElementById("linkForm").hidden = toggle;
-
             if (document.getElementById("linkForm").hidden == true){
                 document.getElementById("linkForm").hidden = false;
             }
@@ -33,8 +31,8 @@
         }
 
     function editProf() {
-        //document.getElementById("linkForm").hidden = toggle;
 
+        //document.getElementById("linkForm").hidden = toggle;
         if (document.getElementById("linkBtn").hidden == true){
             document.getElementById("linkBtn").hidden = false;
         }
@@ -50,13 +48,14 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
                 <div class="d-flex justify-content-center h-100">
-                    <form action="/dashboard" method="post">
+                    <form action="/searchUser" method="post">
                     <div class="searchbar"><input type="text" name="username" class="search_input" placeholder="Search..."><button class="search_icon" type="sumbit"><i class="fas fa-search"></i></button></div>
                     </form>
                 </div>
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" href="#about">Media Content</a></li>
-                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#contact">Contact</a></li>
+                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" href="#">Link</a></li>
+                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#media">Media Content</a></li>
+                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#report">Report</a></li>
                     <li class="nav-item"></li>
                 </ul>
                 <ul class="navbar-nav">
@@ -65,9 +64,7 @@
                     <li class="nav-item"></li>
                 </ul>
                 <ul class="navbar-nav">
-
                     <!-- Header Tags //logout, changePassword -->
-
                     <li class="nav-item"></li>
                 </ul>
             </div>
@@ -78,90 +75,75 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
-
-                        <h3 class="brand-heading"> <%= user.username %>!</h3>
-
                     <br>
 
-                    
                     <!-- Display added link to profile.ejs? -->
-                    
+        
                     <!-- <form action="/dashboard" method="post" id='remove-btn'>  -->
 
                         <!-- Here, try to see if passing user.urls object id back to the backend will allow it to be removed? -->
-                    <div class="container">
-                    <% for( let index = 0; index < user.urls.length; index++ ) { %>
+                        <img style = "border-radius: 50%;" src="/img/avatar.jpg">
+                        <h1 class="brand-heading" style = "margin-bottom:auto"><%= user.username %></h1>
+                        <a class="btn btn-link btn-circle js-scroll-trigger"  role="button" href="#media"><i class="fa fa-angle-double-down animated"></i></a>
+                        <div class="container">
+                        <% for( let index = 0; index < user.urls.length; index++ ) { %>
                         <!-- onclick="deleteEntry('<%# user._id %>','<%# user.urls[index].title %>', '<%# user.urls[index].url %>' -->
                         <!-- FIX LATER: <button frommethod = "post" formaction="/dashboard" id = "jeff">remove{icon}</button> -->
                         <div class="row">
                             <div class= "col-md-12">
-                                <br><a href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
+                                <br><a class = "btn btn-primary btn-lg btn-default" target="_blank" style="margin: -5px; width: 75%;" href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
                             </div>
                         </div>
-                            
-                        
                     <% } %>
                     </div>
-
-                        <img style = "border-radius: 50%;" src="/img/avatar.jpg">
-                        <h1 class="brand-heading" style = "margin-bottom:auto"><%= user.username %></h1>
-                        <p><%= user.testPhrase %></p><p class="intro-text">Bio for people to see</p><a class="btn btn-link btn-circle" 
-                        role="button" href="#about"><i class="fa fa-angle-double-down animated"></i></a>
-
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <section class="text-center content-section" id="about">
+    <section class="text-center content-section" id="media">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 mx-auto">
-                    <h2><p>Media Content</p></h2>
-                    <iframe width="420" height="315"
-                    src="https://www.youtube.com/embed/_zZ7fIkpBgs">
-                    </iframe>
-                    <iframe style="margin-top:10px" width="420" height="315"
-                    src="https://www.youtube.com/embed/zsJpUCWfyPE">
-                    </iframe>
+                    <h2><p style = "font-size: 32pt;">Media Content</p></h2>
+                    <div class = "container">
+                    <% for (let index = 0; index < user.embeds.length; index++) { %>
+                        <!-- this we tried buttons, but content didnt work properly -->
+                        <p id="<%=user.embeds[index].title%>" hidden="false"><%-user.embeds[index].url%></p>
+                        <br>
+                    </div>
+                    <% } %>
                 </div>
             </div>
         </div>
     </section>
-    <section class="text-center download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');"></section>
-    <section class="text-center content-section" id="contact">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2>Social Networks</h2>
-                    <ul class="list-inline banner-social-buttons">
-                        <li class="list-inline-item">&nbsp;</li>
-                        <li class="list-inline-item">&nbsp;<a class="btn btn-primary btn-lg btn-default" style="margin:10px;" target="_blank" type="button" href="https://twitter.com/"><i class="fa fa-twitter fa-fw"></i><span class="network-name">&nbsp;Twitter</span></a>
-                        <li class="list-inline-item">&nbsp;<a class="btn btn-primary btn-lg btn-default" style="margin:10px;" target="_blank" type="button" href="https://www.twitch.tv/"></i><span class="network-name">&nbsp;Twitch</span></a>
-                        <li class="list-inline-item">&nbsp;<a class="btn btn-primary btn-lg btn-default" style="margin:10px;" target="_blank" type="button" href="https://www.youtube.com/"></i><span class="network-name">&nbsp;Youtube</span></a>
-                        <li class="list-inline-item">&nbsp;</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-    <div class="map-clean"></div>
-    <footer>
-        <p>report user</p>
-        <form id="myForm">
-          <label for="reason">reason:</label><br>
+
+    <section class="download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');">
+    <section id="report">
+
+        <p style = "font-size: 20pt; margin-left: 20px; margin-bottom: 20px"><u>Report User</u></p>
+
+        <form style = "margin-left: 20px"id="myForm">
+          <label for="reason">Reason</label><br>
           <select id="reason" name="reason">
+            <option value="" disabled selected>Select your reason..</option>
             <option value="Leads to bad website">Leads to bad website</option>
             <option value="Misleading link">Misleading link</option>
             <option value="Unacceptable profanity in link name">Unacceptable profanity in link name</option>
             <option value="Other">Other</option>
           </select><br>
-          <label>comment:</label><br>
+          <label style="margin-top: 10px;">Comment</label><br>
           <input type="text" id="comment" name="comment">
           <input type="hidden" id="username" name="username" value=<%= user.username%> />
           <input id='button' type="submit" value="Submit">
         </form>
+        
+    </section>
+    </section>
+
+    <div class="map-clean"></div>
+    <footer>
         <div class="container text-center">
             <p>Copyright ©&nbsp;C-Hub 2021</p>
         </div>
@@ -171,7 +153,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
     <script src="/js/grayscale.js"></script>
 </body>
-
 
 </html>
 

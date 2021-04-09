@@ -76,10 +76,8 @@
       //try to fix or just style embeds better
 
     }
+
 </script>
-
-
-
 
 <body id="page-top">
     <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
@@ -87,18 +85,17 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
                 <div class="d-flex justify-content-center h-100">
-                    <form action="dashboard" method="post">
+                    <form action="searchUser" method="post">
                     <div class="searchbar"><input type="text" name="username" class="search_input" placeholder="Search..."><button class="search_icon" type="sumbit"><i class="fas fa-search"></i></button></div>
                     </form>
                 </div>
                 <ul class="navbar-nav ml-auto">
 
                     <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" onclick="editProf()">Edit</a></li>
-                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#contact">contact</a></li>
-                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" href="#about">About</a></li>
+                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#media">Media</a></li>
                     <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/profile/<%= user.username %>">Profile</a></li>
-
                     <li class="nav-item"></li>
+
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item"></li>
@@ -118,73 +115,75 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
+                    <h1 class="brand-heading">Welcome, <%= user.username %></h1>
+                    <button class="btn btn-lg btn-white" style = "margin-right: 10px; width: 25%;" onclick="myFunction()" id="linkBtn" hidden='true'> Add a link </button>
+                    <button class="btn btn-lg btn-white" style = "margin-right: 10px; width: 25%;" onclick="showEmbed()" id="EmbedBtn" hidden='true'> Add an embed </button>
 
-                        <h3 class="brand-heading">Welcome <%= user.username %>!</h3>
-                        
-                    <button onclick="myFunction()" id="linkBtn" hidden='true'> Add a link </button>
-                    <button onclick="showEmbed()" id="EmbedBtn" hidden='true'> Add an embed </button>
-
-
-                    <div class = "linkInput">
+                    <div style = "margin-top: 10px" class = "linkInput">
                         <form action="/dashboard" method="post" id="linkForm" hidden>
-                            <input type="text" name="title" id="title" placeholder="Title">
-                            <input type="url" name="url" id="url" placeholder="Link">
-                            <button type = "submit" value="Submit" >Submit</button>
+                            <input style = "height: 37px;" type="text" name="title" id="title" placeholder="Title">
+                            <input style = "height: 37px;" type="url" name="url" id="url" placeholder="Link">
+                            <button class = "btn btn-white" type = "submit" value="Submit" >Submit</button>
                         </form>
                     </div>
-                    <div class = "EmbedInput">
+                    <div style = "margin-top: 10px" class = "EmbedInput">
                         <form action="/dashboard" method="post" id="EmbedForm" hidden>
-                            <input type="text" name="embedTitle" id="embedTitle" placeholder="Title/Site">
-                            <input name="embedUrl" id="embedUrl" placeholder="Paste Embed from Site">
-                            <button type = "submit" value="Submit" >Submit</button>
+                            <input style = "height: 37px;" type="text" name="embedTitle" id="embedTitle" placeholder="Title/Site">
+                            <input style = "height: 37px;" name="embedUrl" id="embedUrl" placeholder="Paste Embed from Site">
+                            <button class = "btn btn-white" type = "submit" value="Submit" >Submit</button>
                         </form>
                     </div>
-
-
-
+                    
                     <br>
-
-                    <div class = "container">
-                      <%for (let index = 0; index < user.embeds.length; index++) {%>
-                          <!-- this we tried buttons, but content didnt work properly -->
-                            <p id="<%user.embeds[index].title%>" hidden="true"> <%-user.embeds[index].url%></p>
-                          <br>
-
-                    </div>
-                    <% } %>
 
                     <div class="container">
                     <% for( let index = 0; index < user.urls.length; index++ ) { %>
                         <div class="row">
                             <div class= "col-md-12">
-                                <br><a href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a> <button class="remove-btn" hidden = "true" onmousedown="delLink('<%=user.urls[index]._id%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
-                                
+                                <br><a class = "btn btn-primary btn-lg btn-default" style="margin: -5px; width: 75%;" target="_blank" href="<%=user.urls[index].url%>">
+                                    <%=user.urls[index].title%></a> <button class="remove-btn btn btn-red" style="margin-left: 7px;" hidden = "true" onmousedown="delLink('<%=user.urls[index]._id%>')">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> </button>
                             </div>
                         </div>       
                     <% } %>
-                    
                     </div>
-                        <h1 class="brand-heading">Welcome <%= user.username %>!</h1>
                         <% if (user.admin == true){ %>
                         <p>this is an admin account</p>
                         <% } %>
-                        <p class="intro-text">All of your favorite content. All in one place.</p><a class="btn btn-link btn-circle" role="button" href="#about"><i class="fa fa-angle-double-down animated"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </header>
+
+    <section class="text-center content-section" id="media">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h2><p style = "font-size: 32pt;">Media Content</p></h2>
+                    <% for (let index = 0; index < user.embeds.length; index++) { %>
+                        <!-- this we tried buttons, but content didnt work properly -->
+                        <p id="<%=user.embeds[index].title%>" hidden="true"> <%-user.embeds[index].url%></p>
+                        <br>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="text-center download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');"></section>
+
     <div class="map-clean"></div>
     <footer>
         <div class="container text-center">
             <p>Copyright ©&nbsp;C-Hub 2021</p>
         </div>
     </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
     <script src="/js/grayscale.js"></script>
-</body>
 
+</body>
 </html>

@@ -126,11 +126,7 @@ router.post('/register', (req, res) => {
               newUser.save()
                 .then((value) => {
                   req.flash('success_msg', 'you have now registered, please check your email for a verification link!');
-<<<<<<< HEAD
-                  req.session.save(function() {
-=======
                   req.session.save(function () {
->>>>>>> 802c937e3ac250c1d9c38a1c7172da60d831c49b
                     res.redirect('/users/login');
                   });
                 }).catch(value => console.log(value));
@@ -225,13 +221,8 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success_msg', 'You successfully logged out!');
-<<<<<<< HEAD
-  req.session.save(function() {
-    res.redirect('/');
-=======
   req.session.save(function () {
     res.redirect('/users/login');
->>>>>>> 802c937e3ac250c1d9c38a1c7172da60d831c49b
     return false;
   });
 });
@@ -401,6 +392,5 @@ router.post('/reset/:token', function(req, res) {
     res.redirect('/dashboard');
   });
 });
-
 
 module.exports = router;
