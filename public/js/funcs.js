@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 $(function() {
   $('#button').click(function(event) {
     event.preventDefault();
-=======
-
-require('mongoose');
-const User = require('../../models/user.js');
->>>>>>> 802c937e3ac250c1d9c38a1c7172da60d831c49b
 
     let username = $('#username').val();
 
@@ -22,7 +16,6 @@ const User = require('../../models/user.js');
   })
 });
 
-<<<<<<< HEAD
 
 // require('mongoose');
 // const User = require('../../models/user.js');
@@ -48,25 +41,3 @@ const User = require('../../models/user.js');
 //     }
 //   });
 // };
-=======
-};	
-
-$(function() {
-  $('#button').click(function(event) {
-    event.preventDefault();
-
-    let username = $('#username').val();
-
-    //this ajax call posts the data to the backend without reloading the page
-    $.ajax({
-      url: username,
-      type: "POST",
-      data: { reason: $('#reason').val(), comment: $('#comment').val() }
-    });
-
-    alert("report successful!");
-
-  })
-});
-
->>>>>>> 802c937e3ac250c1d9c38a1c7172da60d831c49b
