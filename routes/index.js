@@ -34,7 +34,7 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 	// 	}
 	// });
 
-	User.findById(req.user._id, function(err, user) {
+	User.findById(req.user._id, function (err, user) {
 		if (err) {
 			console.log(err)
 		} else {
@@ -63,23 +63,20 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 	// 	}
 	// });
 
-	User.findById(req.user._id, function(err,user){
-		if(err){
+	User.findById(req.user._id, function (err, user) {
+		if (err) {
 			console.log(err)
-		}else{
+		} else {
 			// $push: {urls: { title: inTitle, url: inLink};
-			if(inTitle == null || inLink == null){
-				
+			if (embedTitle == null || embedLink == null) {
+
 			}
-			else{
-				user.urls.pull({title:inTitle, url: inLink});
+			else {
+				user.embeds.push({ title: embedTitle, url: embedLink });
 				user.save();
 			}
 		}
-	}).updateOne(
-		{},
-		{$push: {embeds: {title: embedTitle, url: embedLink}}}
-	);
+	});
 
 	// User.findById(req.user._id, function(err, user) {
 	// 	if (err) {
@@ -97,22 +94,31 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 	// 	}
 	// });
 
-	console.log(req.body.linkId);
-
-	User.findById(req.user._id, function(err,user){
-		if(err){
+	//deletes URLs
+	User.findById(req.user._id, function (err, user) {
+		if (err) {
 			console.log(err)
 		}
 	}).updateOne(
 		{},
-		{$pull: {urls: {_id: req.body.linkId}}}
+		{ $pull: { urls: { _id: req.body.linkId } } }
+	);
+
+	//DELETES: Embeds 
+	User.findById(req.user._id, function (err, user) {
+		if (err) {
+			console.log(err)
+		}
+	}).updateOne(
+		{},
+		{ $pull: { embeds: { _id: req.body.embID } } }
 	);
 
 	res.redirect('/dashboard');
 });
 
 //Search for user
-router.post('/searchUser', (req, res) => {
+router.post('/search', (req, res) => {
 	const { username } = req.body;
 	let errors = [];
 
@@ -148,5 +154,13 @@ router.post('/searchUser', (req, res) => {
 		});
 	}
 });
+
+// var test = document.getElementById('jeff');
+// test.onclick = deleteEntry();
+
+function deleteEntry() {
+	//req.user._id.urls.splice(index,1);
+};
+
 
 module.exports = router;

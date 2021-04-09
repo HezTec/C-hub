@@ -61,6 +61,12 @@
     }
 
     //sends ID to backend to be deleted
+    function delLink(id){
+        $.post('/dashboard', {linkId: id});
+        window.location.reload();
+    }
+
+    //sends ID to backend to be deleted
     function delEmb(id){
         $.post('/dashboard', {embID: id});
         window.location.reload();
@@ -163,7 +169,7 @@
                           <div class = "row">
                               <div class = "col-md-12">
         
-                                <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin-top: 15px; width: 50%;"" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
+                                <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin-top: 10px; width: 50%;" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
                                 <button class="remove-btn btn btn-red" style="margin-left: 7px;" hidden = "true" onmousedown="delEmb('<%=user.embeds[index]._id%>','<%=index%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
                                  <br>
                                 <div style="margin-top: 30px;" id='<%=user.embeds[index]._id%>' hidden= true> 
