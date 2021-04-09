@@ -40,6 +40,28 @@
             document.getElementById("linkBtn").hidden = true;
         }
     }
+
+       function showEmbed() {
+            //document.getElementById("linkForm").hidden = toggle;
+
+            if (document.getElementById("EmbedForm").hidden == true){
+                document.getElementById("EmbedForm").hidden = false;
+            }
+            else{
+                document.getElementById("EmbedForm").hidden = true;
+            }
+        }
+
+        function showEmbedContent(id, HTML){
+        if(document.getElementById(id).hidden == true){
+            document.getElementById(id).hidden = false;
+            console.log(index);
+            //document.getElementById(id).innerHTML = HTML;
+        }
+        else{
+            document.getElementById(id).hidden = true;
+        }
+    }
 </script>
 
 <body id="page-top">
@@ -103,20 +125,22 @@
     </header>
 
     <section class="text-center content-section" id="media">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2><p style = "font-size: 32pt;">Media Content</p></h2>
-                    <div class = "container">
-                    <% for (let index = 0; index < user.embeds.length; index++) { %>
-                        <!-- this we tried buttons, but content didnt work properly -->
-                        <p id="<%=user.embeds[index].title%>" hidden="false"><%-user.embeds[index].url%></p>
+     <h2><p style = "font-size: 32pt;">Media Content</p></h2>
+        <div class = "container">
+                <%for (let index = 0; index < user.embeds.length; index++) { %>
+                    <div class = "row">
+                        <div class = "col-md-12">
+        
+                        <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin-top: 15px; width: 50%;"" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
+                        <button class="remove-btn btn btn-red" style="margin-left: 7px;" hidden = "true" onmousedown="delEmb('<%=user.embeds[index]._id%>','<%=index%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
                         <br>
+                        <div style="margin-top: 30px;" id='<%=user.embeds[index]._id%>' hidden= true> 
+                            <%-user.embeds[index].url%> 
+                        </div>
+                     </div>
                     </div>
                     <% } %>
-                </div>
-            </div>
-        </div>
+                </div> 
     </section>
 
     <section class="download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');">

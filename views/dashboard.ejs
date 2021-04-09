@@ -60,21 +60,21 @@
         }
     }
 
-    function delLink(id){
-      $.post('/dashboard', {linkId: id});
-      window.location.reload();
+    //sends ID to backend to be deleted
+    function delEmb(id){
+        $.post('/dashboard', {embID: id});
+        window.location.reload();
     }
 
-    function showEmbedContent(inp,cnt){
-      console.log(inp);
-      console.log(cnt);
-
-      //doesn't work
-      document.getElementById(inp).innerHTML = "words";
-
-      //we tried to do individual buttons for embeds, but it bugged out. 
-      //try to fix or just style embeds better
-
+    function showEmbedContent(id, HTML){
+        if(document.getElementById(id).hidden == true){
+            document.getElementById(id).hidden = false;
+            console.log(index);
+            //document.getElementById(id).innerHTML = HTML;
+        }
+        else{
+            document.getElementById(id).hidden = true;
+        }
     }
 
 </script>
@@ -157,18 +157,22 @@
     </header>
 
     <section class="text-center content-section" id="media">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2><p style = "font-size: 32pt;">Media Content</p></h2>
-                    <% for (let index = 0; index < user.embeds.length; index++) { %>
-                        <!-- this we tried buttons, but content didnt work properly -->
-                        <p id="<%=user.embeds[index].title%>" hidden="true"> <%-user.embeds[index].url%></p>
-                        <br>
-                    <% } %>
-                </div>
-            </div>
-        </div>
+        <h2><p style = "font-size: 32pt;">Media Content</p></h2>
+        <div class = "container">
+                      <%for (let index = 0; index < user.embeds.length; index++) { %>
+                          <div class = "row">
+                              <div class = "col-md-12">
+        
+                                <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin-top: 15px; width: 50%;"" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
+                                <button class="remove-btn btn btn-red" style="margin-left: 7px;" hidden = "true" onmousedown="delEmb('<%=user.embeds[index]._id%>','<%=index%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
+                                 <br>
+                                <div style="margin-top: 30px;" id='<%=user.embeds[index]._id%>' hidden= true> 
+                                    <%-user.embeds[index].url%> 
+                                </div>
+                              </div>
+                            </div>
+                         <% } %>
+                    </div>  
     </section>
 
     <section class="text-center download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');"></section>
