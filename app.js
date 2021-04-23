@@ -55,6 +55,7 @@ app.use(flash());
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/profile', require('./routes/profile'));
+app.use('/admin', require('./routes/admin'));
 
 
 app.listen(3000);

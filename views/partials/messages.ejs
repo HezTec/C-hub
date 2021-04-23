@@ -3,16 +3,16 @@
       <%    errors.forEach(function(error){ %>
                   <p> <%= error.msg %></p>
       <%    })        %>
-      <% } %>   
+      <% } %>
 
-<% if(error != '') { %>
+<% if(error == '') { %>
       <p><%= success_msg %> </p>
-      <% } %>     
+      <% }%>
 
 <% if(error != '') { %>
       <p><%= error_msg %> </p>
-      <% } %>     
+      <% } %>
 
 <% if(error != '') { %>
       <p><%= error %> </p>
-      <% } %>     
+      <% } %>

@@ -2,8 +2,8 @@
 <html>
 <head>
     <%- include ('./partials/messages') %>
-    <script type="text/javascript" src="/js/funcs.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="/js/funcs.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Home - C-Hub</title>
@@ -18,7 +18,7 @@
 
 </head>
 
-<script> 
+<script>
     function myFunction() {
         
             //document.getElementById("linkForm").hidden = toggle;
@@ -66,7 +66,7 @@
 
 <body id="page-top">
     <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
-        <a href='/dashboard'><div class="container"><img src="/img/C-hub%20(3).png"></a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
+        <a href='/'><div class="container"><img src="/img/C-hub%20(3).png"></a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
                 <div class="d-flex justify-content-center h-100">
@@ -154,9 +154,17 @@
             <option value="" disabled selected>Select your reason..</option>
             <option value="Leads to bad website">Leads to bad website</option>
             <option value="Misleading link">Misleading link</option>
+            <option value="Inappropriate profile picture">Inappropriate profile picture</option>
             <option value="Unacceptable profanity in link name">Unacceptable profanity in link name</option>
             <option value="Other">Other</option>
           </select><br>
+          <label>comment:</label><br>
+          <input type="text" id="comment" name="comment">
+          <input type="hidden" id="username" name="username" value="<%= user.username%>" />
+          <input id='button' type="submit" value="Submit">
+        </form>
+
+
           <label style="margin-top: 10px;">Comment</label><br>
           <input style="margin-bottom: 30px; height: 50px; width: 300px;" type="text" id="comment" name="comment">
           <input type="hidden" id="username" name="username" value=<%= user.username%> />
@@ -179,4 +187,3 @@
 </body>
 
 </html>
-

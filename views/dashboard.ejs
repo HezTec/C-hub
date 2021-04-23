@@ -1,20 +1,20 @@
 <html>
 
 <head>
-    <%- include ('./partials/messages') %>
-    <script type="text/javascript" src="/js/funcs.js"></script>
-        
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Home - C-Hub</title>
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
-    <link rel="stylesheet" href="/css/Growing-Search-Bar-Animated-Text-Input.css">
-    <link rel="stylesheet" href="/css/Search-Input-responsive.css">
+  <%- include ('./partials/messages') %>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="/js/funcs.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>Home - C-Hub</title>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="/css/Growing-Search-Bar-Animated-Text-Input.css">
+  <link rel="stylesheet" href="/css/Search-Input-responsive.css">
 </head>
 
 <script> 
@@ -114,10 +114,21 @@
                     <li class="nav-item"><a class="nav-link" href="/users/forgot">Edit Password</a></li>
                 </ul>
             </div>
-        </div>
-    </nav>
-    <header class="masthead" style="background-image:url('/img/intro-bg.jpg');">
-        <div class="intro-body">
+
+
+            <br>
+
+            <h1 class="brand-heading">Welcome <%= user.username %>!</h1>
+            <% if (user.admin == true){ %>
+            <a href='/admin'>Admin Dashboard</a>
+            <% } %>
+            <p class="intro-text">All of your favorite content. All in one place.</p><a class="btn btn-link btn-circle" role="button" href="#about"><i class="fa fa-angle-double-down animated"></i></a>
+            
+            <!-- Display added link to profile.ejs? -->
+
+            <!-- <form action="/dashboard" method="post" id='remove-btn'>  -->
+
+            <!-- Here, try to see if passing user.urls object id back to the backend will allow it to be removed? -->
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
@@ -158,7 +169,11 @@
                         <% } %>
                     </div>
                 </div>
+              </div>
+              <% } %>
+
             </div>
+          </div>
         </div>
     </header>
 
