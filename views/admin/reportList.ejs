@@ -1,0 +1,12 @@
+<html>
+<%- include ('../partials/messages') %>
+<p>User <%= user.username %></p>
+
+<% for (let index = 0; index < report.reports.length; index++) { %>
+  <p>Report Reason: <%= report.reports[index].reason %></p>
+  <% if(report.reports[index].comment != ''){%>
+    <p>Comment: <%= report.reports[index].comment%></p>
+  <%}%>
+<br>
+<%}%>
+</html>

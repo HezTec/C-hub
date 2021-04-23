@@ -58,8 +58,23 @@ router.get('/reports', (req, res) => {
   })
 });
 
+router.post('/reports', (req, res) => {
+  if (req.body.reportsNumber <= 0) {
+    req.flash('error', 'not a valid input');
+    return res.redirect('/admin/reports');
+  }
+
+  Report.find({ reports: { '$exists': true }, '$where': 'this.reports.length >' + req.body.reportsNumber })
+    .populate('userID').exec(function(err, reports) {
+      res.render('admin/reports', {
+        reports: reports//array of all the reports
+      })
+    })
+
+});
+
 /*
-  upon clickint the delete button next to a user, will reidrect them to an "are your sure page"
+  upon clicking the delete button next to a user, will reidrect them to an "are your sure page"
 */
 router.post('/deleteUser/:userID', (req, res) => {
   User.findOne({ _id: req.params.userID }).exec(function(err, user) {
@@ -92,6 +107,31 @@ router.post('/deleteUser/delete/:userID', (req, res) => {
     req.flash('success_msg', 'user sucessfully deleted');
     res.redirect('/admin');//redirecting back to the admin dashboard after
   });
+});
+
+/*
+  this post sends both user info and report info to the reportList page to display all the reports
+  on the users account
+*/
+router.post('/reportList/:userID', (req, res) => {
+  User.findOne({ _id: req.params.userID }).exec(function(err, user) {
+    if (!user) {
+      req.flash('error', 'no user found');
+      return res.redirect('/admin');
+    }
+
+    Report.findOne({ userID: req.params.userID }).exec(function(err, report) {
+      if (!report) {
+        req.flash('error', 'no reports found');
+        return res.redirect('/admin');
+      }
+
+      res.render('admin/reportList', {
+        user: user,
+        report: report
+      });
+    })
+  })
 });
 
 
