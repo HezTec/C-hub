@@ -20,7 +20,7 @@
 
 <script>
     function myFunction() {
-        
+
             //document.getElementById("linkForm").hidden = toggle;
             if (document.getElementById("linkForm").hidden == true){
                 document.getElementById("linkForm").hidden = false;
@@ -100,7 +100,7 @@
                     <br>
 
                     <!-- Display added link to profile.ejs? -->
-        
+
                     <!-- <form action="/dashboard" method="post" id='remove-btn'>  -->
 
                         <!-- Here, try to see if passing user.urls object id back to the backend will allow it to be removed? -->
@@ -130,17 +130,17 @@
                 <%for (let index = 0; index < user.embeds.length; index++) { %>
                     <div class = "row">
                         <div class = "col-md-12">
-        
+
                         <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin-top: 15px; width: 50%;" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
                         <button class="remove-btn btn btn-red" style="margin-left: 7px;" hidden = "true" onmousedown="delEmb('<%=user.embeds[index]._id%>','<%=index%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
                         <br>
-                        <div style="margin-top: 30px;" id='<%=user.embeds[index]._id%>' hidden= true> 
-                            <%-user.embeds[index].url%> 
+                        <div style="margin-top: 30px;" id='<%=user.embeds[index]._id%>' hidden= true>
+                            <%-user.embeds[index].url%>
                         </div>
                      </div>
                     </div>
                     <% } %>
-                </div> 
+                </div>
     </section>
 
     <section class="download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');">
@@ -150,7 +150,7 @@
 
         <form style = "margin-left: 20px; height: 37px;" id="myForm">
           <label for="reason">Reason</label><br>
-          <select id="reason" name="reason">
+          <select style="margin-bottom: 30px; height: 50px; width: 300px;" id="reason" name="reason">
             <option value="" disabled selected>Select your reason..</option>
             <option value="Leads to bad website">Leads to bad website</option>
             <option value="Misleading link">Misleading link</option>
@@ -159,18 +159,18 @@
             <option value="Other">Other</option>
           </select><br>
           <label>comment:</label><br>
-          <input type="text" id="comment" name="comment">
+          <input style="margin-bottom: 30px; height: 50px; width: 300px;" type="text" id="comment" name="comment">
           <input type="hidden" id="username" name="username" value="<%= user.username%>" />
-          <input id='button' type="submit" value="Submit">
+          <input class='btn btn-white' id='button' type="submit" value="Submit">
         </form>
 
 
-          <label style="margin-top: 10px;">Comment</label><br>
+          <!-- <label style="margin-top: 10px;">Comment</label><br>
           <input style="margin-bottom: 30px; height: 50px; width: 300px;" type="text" id="comment" name="comment">
           <input type="hidden" id="username" name="username" value=<%= user.username%> />
           <input class = "btn btn-white" id='button' type="submit" value="Submit">
-        </form>
-        
+        </form> -->
+
     </section>
     </section>
 
