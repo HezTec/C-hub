@@ -21,7 +21,7 @@
 
 .searchbar:hover > .search_input {
   padding: 0 10px;
-  width: 450px;
+  width: 380px;
   caret-color: red;
   transition: width 0.4s linear;
 }
@@ -45,5 +45,6 @@
 
 img {
   width: 150px;
+  margin-bottom: 10px;
 }
 

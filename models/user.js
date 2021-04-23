@@ -27,6 +27,7 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+
   resetPasswordToken: {
     type: String,
   },
@@ -53,6 +54,11 @@ const UserSchema = new mongoose.Schema({
   urls: [{
     title: String,
     url: mongoose.SchemaTypes.Url
+  }],
+
+  embeds: [{
+    title: String,
+    url: String
   }]
 
 

@@ -393,5 +393,4 @@ router.post('/reset/:token', function(req, res) {
   });
 });
 
-
 module.exports = router;

@@ -9,7 +9,7 @@ User = require("./models/user");
 
 
 //using the dotenv library for reading env files
-require('dotenv').config({ path: "./env" });
+require('dotenv').config();
 
 //importing the passport config
 require("./config/passport")(passport);
@@ -55,6 +55,7 @@ app.use(flash());
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/profile', require('./routes/profile'));
+app.use('/admin', require('./routes/admin'));
 
 
 app.listen(3000);

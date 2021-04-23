@@ -3,8 +3,6 @@ const router = express.Router();
 const { ensureAuthenticated } = require("../config/auth.js");
 const User = require("../models/user.js");
 
-//login page
-
 router.get('/', (req, res) => {
 	//sending data to tell if the user is logged in
 	res.render('welcome', { auth_info: req.isAuthenticated() });
@@ -23,6 +21,9 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
 router.post('/dashboard', ensureAuthenticated, (req, res) => {
 	var inLink = req.body.url;
 	var inTitle = req.body.title;
+
+	var embedLink = req.body.embedUrl;
+	var embedTitle = req.body.embedTitle;
 	// User.findById(req.user._id, function(err, user){
 	// 	if(err){
 	// 		console.log(err)
@@ -31,7 +32,7 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 	// 	}
 	// });
 
-	User.findById(req.user._id, function(err, user) {
+	User.findById(req.user._id, function (err, user) {
 		if (err) {
 			console.log(err)
 		} else {
@@ -45,29 +46,72 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 			}
 		}
 	});
+	// User.findById(req.user._id, function(err, user) {
+	// 	if (err) {
+	// 		console.log(err)
+	// 	} else {
+	// 		// $push: {urls: { title: inTitle, url: inLink};
+	// 		if (inTitle == null || inLink == null) {
 
-	User.findById(req.user._id, function(err, user) {
+	// 		}
+	// 		else {
+	// 			user.embeds.push({ url: embedLink });
+	// 			user.save();
+	// 		}
+	// 	}
+	// });
+
+	User.findById(req.user._id, function (err, user) {
 		if (err) {
 			console.log(err)
 		} else {
 			// $push: {urls: { title: inTitle, url: inLink};
-			if (inTitle == null || inLink == null) {
+			if (embedTitle == null || embedLink == null) {
 
 			}
 			else {
-				user.urls.pull({ title: inTitle, url: inLink });
+				user.embeds.push({ title: embedTitle, url: embedLink });
 				user.save();
 			}
 		}
 	});
+	// User.findById(req.user._id, function(err, user) {
+	// 	if (err) {
+	// 		console.log(err)
+	// 	} else {
+	// 		// $push: {urls: { title: inTitle, url: inLink};
+	// 		if (inTitle == null || inLink == null) {
 
-	console.log(inLink);
+	// 		}
+	// 		else {
+	// 			user.urls.pull({ _id: req.body.linkId });
+	// 			console.log("link removed");
+	// 			user.save();
+	// 		}
+	// 	}
+	// });
 
-	console.log(req.user._id);
+	//deletes URLs
+	User.findById(req.user._id, function (err, user) {
+		if (err) {
+			console.log(err)
+		}
+	}).updateOne(
+		{},
+		{ $pull: { urls: { _id: req.body.linkId } } }
+	);
 
-	console.log("test")
+	//DELETES: Embeds 
+	User.findById(req.user._id, function (err, user) {
+		if (err) {
+			console.log(err)
+		}
+	}).updateOne(
+		{},
+		{ $pull: { embeds: { _id: req.body.embID } } }
+	);
+
 	res.redirect('/dashboard');
-
 });
 
 //Search for user
@@ -108,12 +152,31 @@ router.post('/search', (req, res) => {
 	}
 });
 
+
+//the custom middleware that checks if user is an admin
+var requiresAdmin = function() {
+	return [
+		ensureAuthenticated,
+		function(req, res, next) {
+			if (req.user && req.user.admin === true) {
+				next();
+			} else {//if the user isnt an admin redirect to another page
+				res.status(401).send('Unauthorized');
+			}
+		}
+	]
+};
+//making all admin routes check to see if the user is an admin
+router.all('/admin', requiresAdmin());
+router.all('/admin/*', requiresAdmin());
+
 // var test = document.getElementById('jeff');
 // test.onclick = deleteEntry();
 
 function deleteEntry() {
 	//req.user._id.urls.splice(index,1);
 };
+
 
 
 module.exports = router;

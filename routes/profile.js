@@ -31,7 +31,7 @@ router.get('/:userProfile', function(req, res) {
 /*
   Code to gather user reports and save them to the db
 */
-router.post('/:userProfile', function(req, res) {
+router.post('/report', function(req, res) {
 
   User.findOne({ username: req.body.username }).exec(function(err, user) {
     if (!user) {
@@ -42,10 +42,11 @@ router.post('/:userProfile', function(req, res) {
     //the reports will consist of  a title, a comment, and an index with the index being the index of the link in the user db
     //with that we can find the specific link in question and possibly somehow link to it for an easy admin view.
 
-
-    //this code searches the report db for a users set of reports
-    //if it finds one it will update it [TODO]
-    //if not it will create a new entry in the db
+    /*
+    this code will check if the user has reports already
+    if so it will add this new report to the list,
+    else it will create a new db entry for that user
+    */
     Report.findOne({ userID: user._id }).exec(function(err, report) {
       if (!report) {
 
@@ -54,15 +55,13 @@ router.post('/:userProfile', function(req, res) {
           userID: user._id,
           reports: [{ reason: req.body.reason, comment: req.body.comment }]
         });
+        newReport.save();
 
-        newReport.save()
       } else {
-        console.log('updating report db')//placeholder until the update code is written
+        report.reports.push({ reason: req.body.reason, comment: req.body.comment });
+        report.save();
       }
     });
-
-
-
   })
 });
 

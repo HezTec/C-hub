@@ -1,0 +1,64 @@
+<html>
+
+<head>
+  <%- include ('../partials/messages') %>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" src="/js/funcs.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>Home - C-Hub</title>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="/css/Growing-Search-Bar-Animated-Text-Input.css">
+  <link rel="stylesheet" href="/css/Search-Input-responsive.css">
+</head>
+
+<nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
+  <a href='/'>
+    <div class="container"><img src="/img/C-hub%20(3).png">
+  </a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i
+      class="fa fa-bars"></i></button>
+  <div class="collapse navbar-collapse" id="navbarResponsive">
+    <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
+    <div class="d-flex justify-content-center h-100">
+      <form action="search" method="post">
+        <div class="searchbar"><input type="text" name="username" class="search_input" placeholder="Search..."><button class="search_icon" type="sumbit"><i class="fas fa-search"></i></button></div>
+      </form>
+    </div>
+    <ul class="navbar-nav ml-auto">
+
+      <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" onclick="editProf()">Edit</a></li>
+      <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#contact">contact</a></li>
+      <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
+      <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/profile/<%= user.username %>">Profile</a></li>
+      <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/users/logout">Logout</a></li>
+      <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/users/forgot">Edit Password</a></li>
+      <li class="nav-item"></li>
+    </ul>
+  </div>
+  </div>
+</nav><br>
+<h1>Admin Dashboard</h1>
+<p>Welcome <%=user.username%></p><br>
+<p>Add admin</p>
+<form action="admin/add" method="post">
+  <label for="reason">Admin Email:</label><br>
+  <input type="text" id=newAdminEmail name="newAdminEmail"></input><br>
+  <input id='button' type="submit" value="Submit">
+</form>
+<% if(user._id == '6059336ccffd2d2ca0fce555'){%>
+
+<p>Delete admin</p>
+<form action="admin/delete" method="post">
+  <label for="reason">Admin Email:</label><br>
+  <input type="text" id=newAdminEmail name="newAdminEmail"></input><br>
+  <input id='button' type="submit" value="Submit">
+</form>
+<%}%>
+
+  <a href="admin/reports"><p>Highly reported users</p></a>
+</html>
