@@ -22,22 +22,96 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 	var inLink = req.body.url;
 	var inTitle = req.body.title;
 
-	//finds the users list of url and adds the new link to it
-	User.findById(req.user._id, function(err, user) {
+	var embedLink = req.body.embedUrl;
+	var embedTitle = req.body.embedTitle;
+	// User.findById(req.user._id, function(err, user){
+	// 	if(err){
+	// 		console.log(err)
+	// 	}else{
+	// 		console.log(user.links)
+	// 	}
+	// });
+
+	User.findById(req.user._id, function (err, user) {
 		if (err) {
 			console.log(err)
 		} else {
+			// $push: {urls: { title: inTitle, url: inLink};
 			if (inTitle == null || inLink == null) {
 
-			} else {
+			}
+			else {
 				user.urls.push({ title: inTitle, url: inLink });
 				user.save();
 			}
 		}
 	});
+	// User.findById(req.user._id, function(err, user) {
+	// 	if (err) {
+	// 		console.log(err)
+	// 	} else {
+	// 		// $push: {urls: { title: inTitle, url: inLink};
+	// 		if (inTitle == null || inLink == null) {
+
+	// 		}
+	// 		else {
+	// 			user.embeds.push({ url: embedLink });
+	// 			user.save();
+	// 		}
+	// 	}
+	// });
+
+	User.findById(req.user._id, function (err, user) {
+		if (err) {
+			console.log(err)
+		} else {
+			// $push: {urls: { title: inTitle, url: inLink};
+			if (embedTitle == null || embedLink == null) {
+
+			}
+			else {
+				user.embeds.push({ title: embedTitle, url: embedLink });
+				user.save();
+			}
+		}
+	});
+	// User.findById(req.user._id, function(err, user) {
+	// 	if (err) {
+	// 		console.log(err)
+	// 	} else {
+	// 		// $push: {urls: { title: inTitle, url: inLink};
+	// 		if (inTitle == null || inLink == null) {
+
+	// 		}
+	// 		else {
+	// 			user.urls.pull({ _id: req.body.linkId });
+	// 			console.log("link removed");
+	// 			user.save();
+	// 		}
+	// 	}
+	// });
+
+	//deletes URLs
+	User.findById(req.user._id, function (err, user) {
+		if (err) {
+			console.log(err)
+		}
+	}).updateOne(
+		{},
+		{ $pull: { urls: { _id: req.body.linkId } } }
+	);
+
+	//DELETES: Embeds 
+	User.findById(req.user._id, function (err, user) {
+		if (err) {
+			console.log(err)
+		}
+	}).updateOne(
+		{},
+		{ $pull: { embeds: { _id: req.body.embID } } }
+	);
 
 	res.redirect('/dashboard');
-
 });
 
 //Search for user
@@ -78,6 +152,7 @@ router.post('/search', (req, res) => {
 	}
 });
 
+
 //the custom middleware that checks if user is an admin
 var requiresAdmin = function() {
 	return [
@@ -94,5 +169,14 @@ var requiresAdmin = function() {
 //making all admin routes check to see if the user is an admin
 router.all('/admin', requiresAdmin());
 router.all('/admin/*', requiresAdmin());
+
+// var test = document.getElementById('jeff');
+// test.onclick = deleteEntry();
+
+function deleteEntry() {
+	//req.user._id.urls.splice(index,1);
+};
+
+
 
 module.exports = router;

@@ -17,69 +17,102 @@
   <link rel="stylesheet" href="/css/Search-Input-responsive.css">
 </head>
 
-<script>
-  function myFunction() {
-    //document.getElementById("linkForm").hidden = toggle;
+<script> 
+    function myFunction() {
+            //document.getElementById("linkForm").hidden = toggle;
 
-    if (document.getElementById("linkForm").hidden == true) {
-      document.getElementById("linkForm").hidden = false;
-    } else {
-      document.getElementById("linkForm").hidden = true;
+            if (document.getElementById("linkForm").hidden == true){
+                document.getElementById("linkForm").hidden = false;
+            }
+            else{
+                document.getElementById("linkForm").hidden = true;
+            }
+        }
+    function showEmbed() {
+            //document.getElementById("linkForm").hidden = toggle;
+
+            if (document.getElementById("EmbedForm").hidden == true){
+                document.getElementById("EmbedForm").hidden = false;
+            }
+            else{
+                document.getElementById("EmbedForm").hidden = true;
+            }
+        }
+
+    function editProf() {
+        //document.getElementById("linkForm").hidden = toggle;
+
+        if (document.getElementById("linkBtn").hidden == true){
+            document.getElementById("linkBtn").hidden = false;
+            document.getElementById("EmbedBtn").hidden = false;
+            var ele = document.getElementsByClassName("remove-btn")
+            for(i = 0; i < ele.length; i++){
+              ele[i].hidden = false;
+            }
+        }
+        else{
+            document.getElementById("linkBtn").hidden = true;
+            document.getElementById("EmbedBtn").hidden = true;
+            var ele = document.getElementsByClassName("remove-btn")
+            for(i = 0; i < ele.length; i++){
+              ele[i].hidden = true;
+            }
+        }
     }
-  }
 
-  function editProf() {
-    //document.getElementById("linkForm").hidden = toggle;
-
-    if (document.getElementById("linkBtn").hidden == true) {
-      document.getElementById("linkBtn").hidden = false;
-    } else {
-      document.getElementById("linkBtn").hidden = true;
+    //sends ID to backend to be deleted
+    function delLink(id){
+        $.post('/dashboard', {linkId: id});
+        window.location.reload();
     }
-  }
+
+    //sends ID to backend to be deleted
+    function delEmb(id){
+        $.post('/dashboard', {embID: id});
+        window.location.reload();
+    }
+
+    function showEmbedContent(id, HTML){
+        if(document.getElementById(id).hidden == true){
+            document.getElementById(id).hidden = false;
+            console.log(index);
+            //document.getElementById(id).innerHTML = HTML;
+        }
+        else{
+            document.getElementById(id).hidden = true;
+        }
+    }
+
 </script>
 
 <body id="page-top">
-  <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
-    <a href='/'>
-      <div class="container"><img src="/img/C-hub%20(3).png">
-    </a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i
-        class="fa fa-bars"></i></button>
-    <div class="collapse navbar-collapse" id="navbarResponsive">
-      <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
-      <div class="d-flex justify-content-center h-100">
-        <form action="search" method="post">
-          <div class="searchbar"><input type="text" name="username" class="search_input" placeholder="Search..."><button class="search_icon" type="sumbit"><i class="fas fa-search"></i></button></div>
-        </form>
-      </div>
-      <ul class="navbar-nav ml-auto">
+    <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
+        <a href='/'><div class="container"><img src="/img/C-hub%20(3).png"></a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
+                <div class="d-flex justify-content-center h-100">
+                    <form action="search" method="post">
+                    <div class="searchbar"><input type="text" name="username" class="search_input" placeholder="Search..."><button class="search_icon" type="sumbit"><i class="fas fa-search"></i></button></div>
+                    </form>
+                </div>
+                <ul class="navbar-nav ml-auto">
 
-        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" onclick="editProf()">Edit</a></li>
-        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#contact">contact</a></li>
-        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
-        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/profile/<%= user.username %>">Profile</a></li>
-        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/users/logout">Logout</a></li>
-        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/users/forgot">Edit Password</a></li>
-        <li class="nav-item"></li>
-      </ul>
-    </div>
-    </div>
-  </nav>
-  <header class="masthead" style="background-image:url('/img/intro-bg.jpg');">
-    <div class="intro-body">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-8 mx-auto">
+                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" onclick="editProf()">Edit</a></li>
+                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#media">Media</a></li>
+                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/profile/<%= user.username %>">Profile</a></li>
+                    <li class="nav-item"></li>
 
-            <button onclick="myFunction()" id="linkBtn" hidden='true'> Add a link </button>
-
-
-            <div class="linkInput">
-              <form action="/dashboard" method="post" id="linkForm" hidden>
-                <input type="text" name="title" id="title" placeholder="Title">
-                <input type="url" name="url" id="url" placeholder="Link">
-                <button type="submit" value="Submit">Submit</button>
-              </form>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"></li>
+                    <li class="nav-item"><a class="nav-link" href="/users/logout">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/users/forgot">Edit Password</a></li>
+                </ul>
             </div>
 
 
@@ -97,12 +130,44 @@
 
             <!-- Here, try to see if passing user.urls object id back to the backend will allow it to be removed? -->
             <div class="container">
-              <% for( let index = 0; index < user.urls.length; index++ ) { %>
-              <!-- onclick="deleteEntry('<%# user._id %>','<%# user.urls[index].title %>', '<%# user.urls[index].url %>' -->
-              <!-- FIX LATER: <button frommethod = "post" formaction="/dashboard" id = "jeff">remove{icon}</button> -->
-              <div class="row">
-                <div class="col-md-12">
-                  <br><a href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                    <h1 class="brand-heading">Welcome, <%= user.username %></h1>
+                    <button class="btn btn-lg btn-white" style = "margin-right: 10px; width: 25%;" onclick="myFunction()" id="linkBtn" hidden='true'> Add a link </button>
+                    <button class="btn btn-lg btn-white" style = "margin-right: 10px; width: 25%;" onclick="showEmbed()" id="EmbedBtn" hidden='true'> Add an embed </button>
+
+                    <div style = "margin-top: 10px" class = "linkInput">
+                        <form action="/dashboard" method="post" id="linkForm" hidden>
+                            <input style = "height: 37px;" type="text" name="title" id="title" placeholder="Title">
+                            <input style = "height: 37px;" type="url" name="url" id="url" placeholder="Link">
+                            <button class = "btn btn-white" type = "submit" value="Submit" >Submit</button>
+                        </form>
+                    </div>
+                    <div style = "margin-top: 10px" class = "EmbedInput">
+                        <form action="/dashboard" method="post" id="EmbedForm" hidden>
+                            <input style = "height: 37px;" type="text" name="embedTitle" id="embedTitle" placeholder="Title/Site">
+                            <input style = "height: 37px;" name="embedUrl" id="embedUrl" placeholder="Paste Embed from Site">
+                            <button class = "btn btn-white" type = "submit" value="Submit" >Submit</button>
+                        </form>
+                    </div>
+                    
+                    <br>
+
+                    <div class="container">
+                    <% for( let index = 0; index < user.urls.length; index++ ) { %>
+                        <div class="row">
+                            <div class= "col-md-12">
+                                <br><a class = "btn btn-primary btn-lg btn-default" style="margin: -5px; width: 75%;" target="_blank" href="<%=user.urls[index].url%>">
+                                    <%=user.urls[index].title%></a> <button class="remove-btn btn btn-red" style="margin-left: 7px;" hidden = "true" onmousedown="delLink('<%=user.urls[index]._id%>')">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                            </div>
+                        </div>       
+                    <% } %>
+                    </div>
+                        <% if (user.admin == true){ %>
+                        <p>this is an admin account</p>
+                        <% } %>
+                    </div>
                 </div>
               </div>
               <% } %>
@@ -110,20 +175,40 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </header>
-  <section class="text-center download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');"></section>
-  <div class="map-clean"></div>
-  <footer>
-    <div class="container text-center">
-      <p>Copyright ©&nbsp;C-Hub 2021</p>
-    </div>
-  </footer>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-  <script src="/js/grayscale.js"></script>
-</body>
+    </header>
 
+    <section class="text-center content-section" id="media">
+        <h2><p style = "font-size: 32pt;">Media Content</p></h2>
+        <div class = "container">
+                      <%for (let index = 0; index < user.embeds.length; index++) { %>
+                          <div class = "row">
+                              <div class = "col-md-12">
+        
+                                <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin-top: 10px; width: 50%;" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
+                                <button class="remove-btn btn btn-red" style="margin-left: 7px;" hidden = "true" onmousedown="delEmb('<%=user.embeds[index]._id%>','<%=index%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
+                                 <br>
+                                <div style="margin-top: 30px;" id='<%=user.embeds[index]._id%>' hidden= true> 
+                                    <%-user.embeds[index].url%> 
+                                </div>
+                              </div>
+                            </div>
+                         <% } %>
+                    </div>  
+    </section>
+
+    <section class="text-center download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');"></section>
+
+    <div class="map-clean"></div>
+    <footer>
+        <div class="container text-center">
+            <p>Copyright ©&nbsp;C-Hub 2021</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="/js/grayscale.js"></script>
+
+</body>
 </html>
