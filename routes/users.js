@@ -157,7 +157,6 @@ router.post('/register', (req, res) => {
               };
               //sending the mail
               smtpTransport.sendMail(mailOptions, function(err) {
-                console.log('Mail Sent!');
               });
 
             }));
@@ -286,7 +285,6 @@ router.post('/forgot', function(req, res, next) {
       };
       //This is an email success message that lets the user know the email has sent successfully
       smtpTransport.sendMail(mailOptions, function(err) {
-        console.log('mail sent');
         req.flash('success_msg', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
         done(err, 'done');
       });
@@ -342,20 +340,20 @@ router.post('/reset/:token', function(req, res) {
                 User.findByIdAndUpdate({
                   _id: user._id
                 }, {
-                    "password": req.body.password
-                  }, function(err, result) {
-                    result.resetPasswordToken = undefined;
-                    result.resetPasswordExpires = undefined;
-                    result.save();
+                  "password": req.body.password
+                }, function(err, result) {
+                  result.resetPasswordToken = undefined;
+                  result.resetPasswordExpires = undefined;
+                  result.save();
 
-                    if (err) {
-                      res.send(err)
-                    } else {
-                      req.login(user, function(err) {
-                        done(err, user);
-                      });
-                    }
-                  })
+                  if (err) {
+                    res.send(err)
+                  } else {
+                    req.login(user, function(err) {
+                      done(err, user);
+                    });
+                  }
+                })
               }));
         } else {
           req.flash("error", "Passwords do not match.");

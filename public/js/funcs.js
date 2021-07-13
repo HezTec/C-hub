@@ -1,5 +1,5 @@
 $(function() {
-  $('#button').click(function(event) {
+  $('#reportButton').click(function(event) {
     event.preventDefault();
 
     let username = $('#username').val();

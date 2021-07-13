@@ -24,19 +24,11 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 
 	var embedLink = req.body.embedUrl;
 	var embedTitle = req.body.embedTitle;
-	// User.findById(req.user._id, function(err, user){
-	// 	if(err){
-	// 		console.log(err)
-	// 	}else{
-	// 		console.log(user.links)
-	// 	}
-	// });
 
-	User.findById(req.user._id, function (err, user) {
+	User.findById(req.user._id, function(err, user) {
 		if (err) {
-			console.log(err)
+			console.log(err);
 		} else {
-			// $push: {urls: { title: inTitle, url: inLink};
 			if (inTitle == null || inLink == null) {
 
 			}
@@ -46,24 +38,10 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 			}
 		}
 	});
-	// User.findById(req.user._id, function(err, user) {
-	// 	if (err) {
-	// 		console.log(err)
-	// 	} else {
-	// 		// $push: {urls: { title: inTitle, url: inLink};
-	// 		if (inTitle == null || inLink == null) {
 
-	// 		}
-	// 		else {
-	// 			user.embeds.push({ url: embedLink });
-	// 			user.save();
-	// 		}
-	// 	}
-	// });
-
-	User.findById(req.user._id, function (err, user) {
+	User.findById(req.user._id, function(err, user) {
 		if (err) {
-			console.log(err)
+			console.log(err);
 		} else {
 			// $push: {urls: { title: inTitle, url: inLink};
 			if (embedTitle == null || embedLink == null) {
@@ -75,36 +53,21 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 			}
 		}
 	});
-	// User.findById(req.user._id, function(err, user) {
-	// 	if (err) {
-	// 		console.log(err)
-	// 	} else {
-	// 		// $push: {urls: { title: inTitle, url: inLink};
-	// 		if (inTitle == null || inLink == null) {
-
-	// 		}
-	// 		else {
-	// 			user.urls.pull({ _id: req.body.linkId });
-	// 			console.log("link removed");
-	// 			user.save();
-	// 		}
-	// 	}
-	// });
 
 	//deletes URLs
-	User.findById(req.user._id, function (err, user) {
+	User.findById(req.user._id, function(err, user) {
 		if (err) {
-			console.log(err)
+			console.log(err);
 		}
 	}).updateOne(
 		{},
 		{ $pull: { urls: { _id: req.body.linkId } } }
 	);
 
-	//DELETES: Embeds 
-	User.findById(req.user._id, function (err, user) {
+	//DELETES: Embeds
+	User.findById(req.user._id, function(err, user) {
 		if (err) {
-			console.log(err)
+			console.log(err);
 		}
 	}).updateOne(
 		{},
@@ -128,20 +91,16 @@ router.post('/search', (req, res) => {
 	} else {
 		//This finds the user through case insenstive search, but doesnt change the link
 		User.find({ username: new RegExp(username, 'i') }).exec((err, user) => {
-			console.log(username);
-			console.log(user);
 
 			if (user == 0) {
 				//checking which values were found in the database to print the error in order to see if search bar is catching data
 				errors.push({ msg: 'Username Not Found.. :(' });
-				console.log("Username Not Found!");
 				res.render('searchUser', {
 					errors
 				});
 
 			} else {
 				for (var i = 0; i < user.length; i++) {
-					console.log("Username Found!");
 					return res.render('searchUser', {
 						errors,
 						user, username

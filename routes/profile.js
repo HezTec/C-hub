@@ -38,9 +38,6 @@ router.post('/report', function(req, res) {
       req.flash('error', 'that user does not exsist');
       return res.redirect('/');
     }
-    console.log(req.body.reason + " " + req.body.comment + " to:" + req.body.username);
-    //the reports will consist of  a title, a comment, and an index with the index being the index of the link in the user db
-    //with that we can find the specific link in question and possibly somehow link to it for an easy admin view.
 
     /*
     this code will check if the user has reports already

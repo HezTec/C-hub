@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const expressEjsLayout = require('express-ejs-layouts');
 const flash = require('connect-flash');
 const passport = require('passport');
+const fs = require('fs');
 User = require("./models/user");
 
 
@@ -14,9 +15,21 @@ require('dotenv').config();
 //importing the passport config
 require("./config/passport")(passport);
 
-//mongoose
-//may need to configure the mongodb, unsure if this will work on a hosted server
-mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true, useUnifiedTopology: true })
+//this code was for testing security features of mongodb
+//to use this code you must update the mongod.conf file
+// mongoose.connect('mongodb://default:password@localhost:21101/test?', {
+//   ssl: true,
+//   sslCert: fs.readFileSync('/etc/ssl/mongodb-cert.crt'),
+//   sslKey: fs.readFileSync('/etc/ssl/mongodb.pem'),
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   sslValidate: false
+// })
+
+mongoose.connect('mongodb://localhost/test', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
   .then(() => console.log('connected,'))
   .catch((err) => console.log(err + ' thrown error'));
 
@@ -28,7 +41,9 @@ app.set('view engine', 'ejs');
 app.use(expressEjsLayout);
 
 //BodyParser
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 
 
 // PASSPORT CONFIGURATION

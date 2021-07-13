@@ -15,7 +15,6 @@ router.get('/', ensureAuthenticated, (req, res) => {
 router.post('/add', (req, res) => {
   User.findOne({ email: req.body.newAdminEmail }).exec(function(err, user) {
     if (!user) {
-      console.log(req.body.newAdminEmail);
       req.flash('error', 'That email does not exsist in the system');
       return res.redirect('/admin')
     }
@@ -30,21 +29,20 @@ router.post('/add', (req, res) => {
 
 
 router.post('/delete', (req, res) => {
-  if (req.user._id == '6059336ccffd2d2ca0fce555') {//only the head admin can delete other admins
-    User.findOne({ email: req.body.newAdminEmail }).exec(function(err, user) {
-      if (!user) {
-        console.log(req.body.newAdminEmail);
-        req.flash('error', 'That email does not exsist in the system');
-        return res.redirect('/admin')
-      }
+  // if (req.user._id == '6059336ccffd2d2ca0fce555') {//only the head admin can delete other admins
+  User.findOne({ email: req.body.newAdminEmail }).exec(function(err, user) {
+    if (!user) {
+      req.flash('error', 'That email does not exsist in the system');
+      return res.redirect('/admin')
+    }
 
-      user.admin = false;
-      user.save();
-      req.flash('success_msg', user.username + ' has been removed as an admin')
-      res.redirect('/admin');//redirecting back to the same page with the success message
+    user.admin = false;
+    user.save();
+    req.flash('success_msg', user.username + ' has been removed as an admin')
+    res.redirect('/admin');//redirecting back to the same page with the success message
 
-    });
-  }
+  });
+  // }
 });
 
 /*
@@ -58,6 +56,7 @@ router.get('/reports', (req, res) => {
   })
 });
 
+//the report post which gets all the reports that are greater than the specified length
 router.post('/reports', (req, res) => {
   if (req.body.reportsNumber <= 0) {
     req.flash('error', 'not a valid input');
