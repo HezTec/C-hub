@@ -46,9 +46,9 @@ const UserSchema = new mongoose.Schema({
     default: false
   },
 
-  testPhrase: {
-    type: String,
-    default: 'this is the test string'
+  suspended: {
+    type: Boolean,
+    default: false
   },
 
   urls: [{

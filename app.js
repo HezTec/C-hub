@@ -50,7 +50,12 @@ app.use(express.urlencoded({
 app.use(require("express-session")({
   secret: 'secret',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+    SameSite: 'strict',
+  }
 }));
 
 app.use(flash());

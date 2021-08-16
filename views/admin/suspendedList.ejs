@@ -1,0 +1,14 @@
+<html>
+<head>
+  <%- include ('../partials/messages') %>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+</head>
+<h1>Suspended Users List</h1><br>
+<%for(let i = 0; i < suspendedList.length; i++){%>
+    <p><%=suspendedList[i].username%></p>
+    <form action='unsuspendUser/<%=suspendedList[i]._id%>' method='post'>
+      <button input type='submit'>Unsuspend</button>
+    </form>
+<%}%>
+</html>
