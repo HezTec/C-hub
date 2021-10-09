@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
   <title>Home - C-Hub</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
@@ -14,9 +15,7 @@
   <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
   <link rel="stylesheet" href="/css/Growing-Search-Bar-Animated-Text-Input.css">
   <link rel="stylesheet" href="/css/Search-Input-responsive.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-
 
 <body id="page-top">
   <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
@@ -54,13 +53,10 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
-            <h3 class="brand-heading">Welcome <%= user.username %>!</h3>
-
-
+            <img style="border-radius: 50%;" src="/img/avatar.jpg">
+            <h1 class="brand-heading" style="margin-bottom:auto"><%= user.username %></h1>
             <button onclick="showURL()" class="btn btn-primary btn-lg btn-default" id="linkBtn" hidden='true'> Add a link </button>
             <button onclick="showEmbed()" class="btn btn-primary btn-lg btn-default" id="EmbedBtn" hidden='true'> Add an embed </button>
-
-
             <div class="linkInput">
               <form action="/dashboard" method="post" id="linkForm" hidden>
                 <input type="text" name="title" id="title" placeholder="Title">
@@ -72,35 +68,36 @@
               <form action="/dashboard" method="post" id="EmbedForm" hidden>
                 <input type="text" name="embedTitle" id="embedTitle" placeholder="Title/Site">
                 <input name="embedUrl" id="embedUrl" placeholder="Paste Embed from Site">
-                <button type="submit" value="Submit" onclick="embedSubmit();">Submit</button>
+                <button type="submit" value="Submit">Submit</button>
               </form>
             </div>
 
-
-
-            <br>
+            <!-- username input for backend ajax call-->
+            <input type="hidden" id="username" name="username" value="<%= user.username%>" />
 
             <div class="container">
-              <%for (let index = 0; index < user.embeds.length; index++) {%>
+              <% for( let index = 0; index < user.urls.length; index++ ) { %>
               <div class="row">
-                <div class="col-md-12">
-                  <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin: 5px; width: 75%;" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
-                  <button class="btn remove-btn btn-outline-danger" hidden="true" onmousedown="delEmb('<%=user.embeds[index]._id%>','<%=index%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
-                  <div id='<%=user.embeds[index]._id%>' hidden=true>
-                    <%-user.embeds[index].url%>
-                  </div>
+                <div style="z-index: 999; position: <%=user.urls[index].position%>; top: <%=user.urls[index].top%>; left: <%=user.urls[index].left%>;" class="col-md-12">
+                  <button id="moveBtnLink<%=index%>" class="btn move-btn btn-secondary" hidden="true" onmousedown="moveContents(document.getElementById('moveBtnLink<%=index%>').parentElement, '<%=user.urls[index]._id%>')"><i class="bi bi-arrows-move"aria-hidden="true"></i></button>
+                  <a class="btn btn-primary btn-lg btn-default" style="margin: 10px; width: 75%;" href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
+                  <button class="btn remove-btn btn-outline-danger" hidden="true" onmousedown="delLink('<%=user.urls[index]._id%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
                 </div>
               </div>
               <% } %>
             </div>
 
             <div class="container">
-              <% for( let index = 0; index < user.urls.length; index++ ) { %>
+              <%for (let index = 0; index < user.embeds.length; index++) {%>
               <div class="row">
-                <div class="col-md-12">
-                  <br><a class="btn btn-primary btn-lg btn-default" style="margin: -7px; width: 75%;" href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
-                  <button class="btn remove-btn btn-outline-danger" style="margin: 10px" hidden="true" onmousedown="delLink('<%=user.urls[index]._id%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
-
+                <div style="z-index: 999; position: <%=user.embeds[index].position%>; top: <%=user.embeds[index].top%>; left: <%=user.embeds[index].left%>;" class="col-md-12">
+                  <button id="moveBtnEmbed<%=index%>" class="btn move-btn btn-secondary" hidden="true" onmousedown="moveContents(document.getElementById('moveBtnEmbed<%=index%>').parentElement, '<%= user.embeds[index]._id%>')"><i class="bi bi-arrows-move" aria-hidden="true"></i>
+                  </button>
+                  <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin: 10px; width: 75%;" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
+                  <button class="btn remove-btn btn-outline-danger" hidden="true" onmousedown="delEmb('<%=user.embeds[index]._id%>','<%=index%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
+                  <div id='<%=user.embeds[index]._id%>' hidden=true>
+                    <%-user.embeds[index].url%>
+                  </div>
                 </div>
               </div>
               <% } %>
@@ -117,96 +114,11 @@
       <p>Copyright ©&nbsp;C-Hub 2021</p>
     </div>
   </footer>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
   <script src="/js/grayscale.js"></script>
-
-  <script>
-
-    /*
-    ------NOTES FOR LATER------
-    so what im trying to do rn is switch the old post method for adding and deleting links
-    with a new ajax call so the page doesnt need to reaload every single time.
-    the function below will be where i house that call which should be easy
-
-    -now the shit i be struggling with
-    twitch embeds for some fuckin reason want us to enter in the current websites url
-    i.e. content-Hub.me so to avoid others doin all that and getting frustrated im gonna do
-    it for them but for some reason editing iframes that arent actual elements and and rather
-    are string inputs from the user es muy hard currently the below code is printing the entire contents
-    of the iframe to console so go from there
-    */
-
-    function embedSubmit(){
-      console.log($('#embedUrl').content());
-    }
-
-
-    function showURL() {
-      //document.getElementById("linkForm").hidden = toggle;
-      if (document.getElementById("linkForm").hidden == true) {
-        document.getElementById("linkForm").hidden = false;
-      } else {
-        document.getElementById("linkForm").hidden = true;
-      }
-    }
-
-    function showEmbed() {
-      //document.getElementById("linkForm").hidden = toggle;
-      if (document.getElementById("EmbedForm").hidden == true) {
-        document.getElementById("EmbedForm").hidden = false;
-      } else {
-        document.getElementById("EmbedForm").hidden = true;
-      }
-    }
-
-    function editProf() {
-      //document.getElementById("linkForm").hidden = toggle;
-      if (document.getElementById("linkBtn").hidden == true) {
-        document.getElementById("linkBtn").hidden = false;
-        document.getElementById("EmbedBtn").hidden = false;
-        var ele = document.getElementsByClassName("remove-btn");
-
-        for (i = 0; i < ele.length; i++) {
-          ele[i].hidden = false;
-        }
-
-      } else {
-        document.getElementById("linkBtn").hidden = true;
-        document.getElementById("EmbedBtn").hidden = true;
-        var ele = document.getElementsByClassName("remove-btn");
-
-        for (i = 0; i < ele.length; i++) {
-          ele[i].hidden = true;
-        }
-
-      }
-    }
-    //sends ID to backend to be deleted
-    function delLink(id) {
-      $.post('/dashboard', {
-        linkId: id
-      });
-      window.location.reload();
-    }
-    //sends ID to backend to be deleted
-    function delEmb(id) {
-      $.post('/dashboard', {
-        embID: id
-      });
-      window.location.reload();
-    }
-
-    function showEmbedContent(id, HTML) {
-      if (document.getElementById(id).hidden == true) {
-        document.getElementById(id).hidden = false;
-        console.log(index);
-        //document.getElementById(id).innerHTML = HTML;
-      } else {
-        document.getElementById(id).hidden = true;
-      }
-    }
-  </script>
+  <script src="/js/dashboardFuncs.js"></script>
 
 </body>
 

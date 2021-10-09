@@ -3,9 +3,8 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 const User = require("../models/user.js");
 const Report = require("../models/report.js");
-const {
-  ensureAuthenticated
-} = require("../config/auth.js");
+const date = new Date();
+const { ensureAuthenticated } = require("../config/auth.js");
 
 //redners the admin dashboard page
 router.get('/', ensureAuthenticated, (req, res) => {
@@ -201,7 +200,13 @@ router.post('/suspendUser/suspend/:userID', (req, res) => {
       req.flash('error', 'No user found');
       return res.redirect('/admin');
     }
-    user.suspended = true;//setting the suspention value to tru to suspend a user
+
+    //setting the suspention value to tru to suspend a user and setting the date of un-suspention
+    user.suspended = {
+      isSuspended: true,
+      unSuspendDate: req.body.unSuspendDate,
+      reason: req.body.reason
+    };
     user.save();
 
     //mailing the user that has been suspended notifying them that they have been suspended
@@ -220,7 +225,9 @@ router.post('/suspendUser/suspend/:userID', (req, res) => {
       from: 'chubservices@gmail.com',
       subject: 'Account suspention',
       text: 'Hello ' + user.username + ',\n\n' +
-        'The moderation team has decided to suspend your account, if you think this is wrong please contact us\n'
+        'The moderation team has decided to suspend your account until '
+        + req.body.unSuspendDate + '.\n Reason: ' + req.body.reason +
+        '.\n\n If you think this is wrong please contact us\n'
     };
 
     //lets the admin know that the user has been sucessfully banned

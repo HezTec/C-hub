@@ -18,48 +18,6 @@
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 
-<script>
-  function myFunction() {
-
-    //document.getElementById("linkForm").hidden = toggle;
-    if (document.getElementById("linkForm").hidden == true) {
-      document.getElementById("linkForm").hidden = false;
-    } else {
-      document.getElementById("linkForm").hidden = true;
-    }
-  }
-
-  function editProf() {
-
-    //document.getElementById("linkForm").hidden = toggle;
-    if (document.getElementById("linkBtn").hidden == true) {
-      document.getElementById("linkBtn").hidden = false;
-    } else {
-      document.getElementById("linkBtn").hidden = true;
-    }
-  }
-
-  function showEmbed() {
-    //document.getElementById("linkForm").hidden = toggle;
-
-    if (document.getElementById("EmbedForm").hidden == true) {
-      document.getElementById("EmbedForm").hidden = false;
-    } else {
-      document.getElementById("EmbedForm").hidden = true;
-    }
-  }
-
-  function showEmbedContent(id, HTML) {
-    if (document.getElementById(id).hidden == true) {
-      document.getElementById(id).hidden = false;
-      console.log(index);
-      //document.getElementById(id).innerHTML = HTML;
-    } else {
-      document.getElementById(id).hidden = true;
-    }
-  }
-</script>
-
 <body id="page-top">
   <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
     <a href='/'>
@@ -74,12 +32,7 @@
         </form>
       </div>
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" href="#">Link</a></li>
-        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#media">Media Content</a></li>
-        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#reports">Report</a></li>
         <li class="nav-item"></li>
-      </ul>
-      <ul class="navbar-nav">
         <!-- this  EJS code below will display the logout button if the user is logged in and login button if not -->
         <% if (auth_info == true){ %>
         <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/dashboard">Dashboard</a></li>
@@ -94,30 +47,33 @@
         <li class="nav-item"></li>
       </ul>
     </div>
-    </div>
   </nav>
   <header class="masthead bg-transparent">
     <div class="intro-body">
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
-            <br>
-
-            <!-- Display added link to profile.ejs? -->
-
-            <!-- <form action="/dashboard" method="post" id='remove-btn'>  -->
-
-            <!-- Here, try to see if passing user.urls object id back to the backend will allow it to be removed? -->
             <img style="border-radius: 50%;" src="/img/avatar.jpg">
             <h1 class="brand-heading" style="margin-bottom:auto"><%= user.username %></h1>
-            <a class="btn btn-link btn-circle js-scroll-trigger" role="button" href="#media"><i class="fa fa-angle-double-down animated"></i></a>
+
             <div class="container">
               <% for( let index = 0; index < user.urls.length; index++ ) { %>
-              <!-- onclick="deleteEntry('<%# user._id %>','<%# user.urls[index].title %>', '<%# user.urls[index].url %>' -->
-              <!-- FIX LATER: <button frommethod = "post" formaction="/dashboard" id = "jeff">remove{icon}</button> -->
               <div class="row">
-                <div class="col-md-12">
-                  <br><a class="btn btn-primary btn-lg btn-default" target="_blank" style="margin: -5px; width: 75%;" href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
+                <div style="z-index: 999; position: <%=user.urls[index].position%>; top: <%=user.urls[index].top%>; left: <%=user.urls[index].left%>;" class="col-md-12">
+                  <a class="btn btn-primary btn-lg btn-default" target="_blank" style="margin: 10px; width: 75%;" href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
+                </div>
+              </div>
+              <% } %>
+            </div>
+
+            <div class="container">
+              <%for (let index = 0; index < user.embeds.length; index++) { %>
+              <div class="row">
+                <div style="z-index: 999; position: <%=user.embeds[index].position%>; top: <%=user.embeds[index].top%>; left: <%=user.embeds[index].left%>;" class="col-md-12">
+                  <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin: 10px; width: 75%;" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
+                  <div  id='<%=user.embeds[index]._id%>' hidden=true>
+                    <%-user.embeds[index].url%>
+                  </div>
                 </div>
               </div>
               <% } %>
@@ -128,26 +84,6 @@
     </div>
   </header>
 
-  <section class="text-center content-section" id="media">
-    <h2>
-      <p style="font-size: 32pt;">Media Content</p>
-    </h2>
-    <div class="container">
-      <%for (let index = 0; index < user.embeds.length; index++) { %>
-      <div class="row">
-        <div class="col-md-12">
-
-          <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin-top: 15px; width: 50%;" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
-
-          <br>
-          <div style="margin-top: 30px;" id='<%=user.embeds[index]._id%>' hidden=true>
-            <%-user.embeds[index].url%>
-          </div>
-        </div>
-      </div>
-      <% } %>
-    </div>
-  </section>
 
   <section class="download-section content-section bg-transparent" id="download">
     <section id="reports">
@@ -187,12 +123,53 @@
     </div>
   </footer>
 
+  <script>
+    function myFunction() {
+
+      //document.getElementById("linkForm").hidden = toggle;
+      if (document.getElementById("linkForm").hidden == true) {
+        document.getElementById("linkForm").hidden = false;
+      } else {
+        document.getElementById("linkForm").hidden = true;
+      }
+    }
+
+    function editProf() {
+
+      //document.getElementById("linkForm").hidden = toggle;
+      if (document.getElementById("linkBtn").hidden == true) {
+        document.getElementById("linkBtn").hidden = false;
+      } else {
+        document.getElementById("linkBtn").hidden = true;
+      }
+    }
+
+    function showEmbed() {
+      //document.getElementById("linkForm").hidden = toggle;
+
+      if (document.getElementById("EmbedForm").hidden == true) {
+        document.getElementById("EmbedForm").hidden = false;
+      } else {
+        document.getElementById("EmbedForm").hidden = true;
+      }
+    }
+
+    function showEmbedContent(id, HTML) {
+      if (document.getElementById(id).hidden == true) {
+        document.getElementById(id).hidden = false;
+        console.log(index);
+        //document.getElementById(id).innerHTML = HTML;
+      } else {
+        document.getElementById(id).hidden = true;
+      }
+    }
+  </script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
   <script src="/js/grayscale.js"></script>
-  <script type="text/javascript" src="/js/funcs.js"></script>
+  <script type="text/javascript" src="/js/reportFunc.js"></script>
 </body>
 
 </html>

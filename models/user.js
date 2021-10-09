@@ -46,20 +46,24 @@ const UserSchema = new mongoose.Schema({
     default: false
   },
 
+  // suspended: {
+  //   type: Boolean,
+  //   default: false
+  // },
+
   suspended: {
-    type: Boolean,
-    default: false
+    isSuspended: Boolean,
+    unSuspendDate: Date,
+    reason: String
   },
 
-  urls: [{
-    title: String,
-    url: mongoose.SchemaTypes.Url
-  }],
+  urls: {
+    type: [{ title: String, url: mongoose.SchemaTypes.Url, top: String, left: String, position: String }]
+  },
 
-  embeds: [{
-    title: String,
-    url: String
-  }]
+  embeds: {
+    type: [{ title: String, url: String, top: String, left: String, position: String }]
+  }
 
 
 });

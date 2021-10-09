@@ -77,6 +77,40 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 	res.redirect('/dashboard');
 });
 
+router.post('/moveElement', ensureAuthenticated, (req, res) => {
+	const username = req.body.username;
+	let top = req.body.top;
+	let left = req.body.left;
+	let elementId = req.body.elementId;
+
+	User.findOne({ username: username }).exec(function(err, user) {
+		if (!user) {
+			req.flash('error', 'that user does not exsist');
+			return res.redirect('/');
+		}
+		//for here i need to find a way to specify if what was moved was an embed or a url to
+		//search the correct array, also this stuff kinda seems like it is slow so maybe a faster way
+		//would be better
+
+		for (var i = 0; i < user.urls.length; i++) {
+			if (user.urls[i]._id == elementId) {
+				user.urls[i].top = top;
+				user.urls[i].left = left;
+				user.urls[i].position = "absolute";
+			}
+		}
+
+		for (var i = 0; i < user.embeds.length; i++) {
+			if (user.embeds[i]._id == elementId) {
+				user.embeds[i].top = top;
+				user.embeds[i].left = left;
+				user.embeds[i].position = "absolute";
+			}
+		}
+		user.save();
+	});
+});
+
 //Search for user
 router.post('/search', (req, res) => {
 	const { username } = req.body;
@@ -128,9 +162,6 @@ var requiresAdmin = function() {
 //making all admin routes check to see if the user is an admin
 router.all('/admin', requiresAdmin());
 router.all('/admin/*', requiresAdmin());
-
-// var test = document.getElementById('jeff');
-// test.onclick = deleteEntry();
 
 function deleteEntry() {
 	//req.user._id.urls.splice(index,1);

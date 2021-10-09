@@ -20,10 +20,24 @@ router.get('/:userProfile', function(req, res) {
     if (!user) {
       req.flash('error', '  That user does not exsist');
       return res.redirect('/dashboard');
-    } else if (user.suspended == true) { //checking if the users account is suspended and loading the suspended page if they are
-      res.render('notFounds/suspended', {
-        auth_info: req.isAuthenticated()
-      });
+    } else if (user.suspended.isSuspended == true) { //checking if the users account is suspended and loading the suspended page if they are
+
+      //checking to see if the users suspension is over and if it is updating the db entry
+      if (Date.now() > user.suspended.unSuspendDate) {
+        user.suspended.isSuspended = false;
+        user.save();
+        //rendering their profile page
+        res.render('profile', {
+          user: user,//the users whos profile is being loaded
+          auth_info: req.isAuthenticated()//the check to see if a user is logged in or not
+        });
+      } else {
+        res.render('notFounds/suspended', {
+          auth_info: req.isAuthenticated()
+        });
+      }
+
+      //if the user has no suspension objec in their db entry this will open their profile
     } else {
       //renering the profile and its info dynamically to the page
       res.render('profile', {
