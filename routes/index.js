@@ -19,62 +19,168 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
 });
 
 router.post('/dashboard', ensureAuthenticated, (req, res) => {
-	var inLink = req.body.url;
-	var inTitle = req.body.title;
 
-	var embedLink = req.body.embedUrl;
-	var embedTitle = req.body.embedTitle;
+	//if the the user sent an empty packet to the backend just do nothing else
+	//do everything as normal
+	if (req.body.editData.length <= 0) {
+		res.redirect('/dashboard');
+	} else {
 
-	User.findById(req.user._id, function(err, user) {
-		if (err) {
-			console.log(err);
-		} else {
-			if (inTitle == null || inLink == null) {
+		//creating the json object of data to edit in the db
+		let editArray = (JSON.parse(req.body.editData))
 
-			}
-			else {
-				user.urls.push({ title: inTitle, url: inLink });
-				user.save();
-			}
-		}
-	});
+		insertIntoDB(editArray).then(setTimeout(() => {
+			res.redirect('/dashboard')
+		}, 5000));
 
-	User.findById(req.user._id, function(err, user) {
-		if (err) {
-			console.log(err);
-		} else {
-			// $push: {urls: { title: inTitle, url: inLink};
-			if (embedTitle == null || embedLink == null) {
+		/**
+		takes the data parameter full of json objects executes all the indicated database alterations
+		@async
+		@param data {array} an array of json objects
+		*/
+		async function insertIntoDB(data) {
+			data.forEach(item => {
 
-			}
-			else {
-				user.embeds.push({ title: embedTitle, url: embedLink });
-				user.save();
-			}
-		}
-	});
+				var inLink = item.url;
+				var inTitle = item.title;
 
-	//deletes URLs
-	User.findById(req.user._id, function(err, user) {
-		if (err) {
-			console.log(err);
-		}
-	}).updateOne(
-		{},
-		{ $pull: { urls: { _id: req.body.linkId } } }
-	);
+				var embedLink = item.embedUrl;
+				var embedTitle = item.embedTitle;
 
-	//DELETES: Embeds
-	User.findById(req.user._id, function(err, user) {
-		if (err) {
-			console.log(err);
-		}
-	}).updateOne(
-		{},
-		{ $pull: { embeds: { _id: req.body.embID } } }
-	);
+				/*
+				if the current json object's action is set to save, execute actions that
+				saves data to the database
+				*/
+				if (item.action == 'save') {
+					User.findById(req.user._id, function(err, user) {
+						if (err) {
+							console.log(err);
+						} else {
+							if (inTitle == null || inLink == null || inLink == '' || inTitle == '') {
 
-	res.redirect('/dashboard');
+							} else {
+								/*
+								if the postion is set to absolute while both the top and left attribute
+								are 0 then the button will move to a weird spot
+								*/
+								let position = 'absolute';
+								if (item.top == 0 && item.left == 0) {
+									position = ''
+								}
+
+								user.urls.push({
+									title: inTitle,
+									url: inLink,
+									top: item.top,
+									left: item.left,
+									position: position
+								});
+								user.save();
+							}
+						}
+					});
+
+					User.findById(req.user._id, function(err, user) {
+						if (err) {
+							console.log(err);
+						} else {
+							// $push: {urls: { title: inTitle, url: inLink};
+							if (embedTitle == null || embedLink == null || embedTitle == "" || embedLink == "") {
+
+							} else {
+								//if the postion is set to absolute while both the top and left attribute
+								//are 0 then the button will move to a weird spot
+								let position = 'absolute';
+								if (item.top == 0 && item.left == 0) {
+									position = ''
+								}
+
+								user.embeds.push({
+									title: embedTitle,
+									url: embedLink,
+									top: item.top,
+									left: item.left,
+									position: position
+								});
+								user.save();
+							}
+						}
+					});
+					/*
+					if the current packet has an _id in the json that means it exsists within the db
+					so there must be a move change going on. the below code checks for that _id and then
+					updates the db accodingly
+					*/
+					if (item._id != null) {
+						const username = req.body.username;
+						let top = item.top;
+						let left = item.left;
+						let elementId = item._id;
+
+						User.findOne({ username: username }).exec(function(err, user) {
+							if (!user) {
+								req.flash('error', 'that user does not exsist');
+								return res.redirect('/');
+							}
+							//for here i need to find a way to specify if what was moved was an embed or a url to
+							//search the correct array, also this stuff kinda seems like it is slow so maybe a faster way
+							//would be better
+
+							for (var i = 0; i < user.urls.length; i++) {
+								if (user.urls[i]._id == elementId) {
+									user.urls[i].top = top;
+									user.urls[i].left = left;
+									user.urls[i].position = "absolute";
+								}
+							}
+
+							for (var i = 0; i < user.embeds.length; i++) {
+								if (user.embeds[i]._id == elementId) {
+									user.embeds[i].top = top;
+									user.embeds[i].left = left;
+									user.embeds[i].position = "absolute";
+								}
+							}
+							user.save();
+						});
+					}
+				};
+				/*
+				if the current json object's action is set to delete, delete that entry
+				from the database
+				*/
+				if (item.action == 'delete') {
+
+					//deletes URLs
+					User.findById(req.user._id, function(err, user) {
+						if (err) {
+							console.log(err);
+						}
+					}).updateOne({}, {
+						$pull: {
+							urls: {
+								_id: item._id
+							}
+						}
+					});
+
+					//DELETES: Embeds
+					User.findById(req.user._id, function(err, user) {
+						if (err) {
+							console.log(err);
+						}
+					}).updateOne({}, {
+						$pull: {
+							embeds: {
+								_id: item._id
+							}
+						}
+					});
+				}
+
+			});
+		};
+	}
 });
 
 router.post('/moveElement', ensureAuthenticated, (req, res) => {
