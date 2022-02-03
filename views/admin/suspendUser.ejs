@@ -1,0 +1,37 @@
+<html>
+<head>
+  <%- include ('../partials/messages') %>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+</head>
+  <p>suspend <%=suspendUser.username%>?</p><br />
+  <p>
+    Suspension Length:
+  </p>
+  <form action="suspend/<%=suspendUser._id%>" method="post">
+  <input id="unSuspendDate" name="unSuspendDate"  min='1899-01-01' required=true type="date" />
+  <input id="reason" name="reason" placeholder="reason" />
+  <button input type="submit">suspend</button>
+  </form>
+
+<script>
+  //getting the current date and setting the minimum date that can be entered for suspension
+  let today = new Date();
+  var day = today.getDate();
+  var month = today.getMonth() + 1;
+  var year = today.getFullYear();
+
+  if(day < 10){
+    day = '0' + day;
+  }
+
+  if(month < 10){
+    month = '0' + month;
+  }
+
+  today = year +'-'+ month + '-' + day;
+
+  document.getElementById("unSuspendDate").setAttribute("min", today);
+</script>
+
+</html>

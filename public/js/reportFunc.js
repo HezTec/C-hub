@@ -1,9 +1,9 @@
 $(function() {
-  $('#button').click(function(event) {
+  $('#reportButton').click(function(event) {
     event.preventDefault();
 
     let username = $('#username').val();
-    $('#button').attr('disabled', 'disabled');
+    $('#reportButton').attr('disabled', 'disabled');
     //this ajax call posts the data to the backend without reloading the page
     $.ajax({
       url: "report",
@@ -12,7 +12,8 @@ $(function() {
       dataType: 'json',
       data: { reason: $('#reason').val(), comment: $('#comment').val(), username: username },
       success: function() {
-        $('#button').removeAttr('disabled');
+        //this code below allows the button to be used more than once per page load
+        // $('#button').removeAttr('disabled');
       },
       error: function() {
         console.log('ajax error');

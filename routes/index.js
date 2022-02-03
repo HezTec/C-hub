@@ -19,99 +19,213 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
 });
 
 router.post('/dashboard', ensureAuthenticated, (req, res) => {
-	var inLink = req.body.url;
-	var inTitle = req.body.title;
 
-	var embedLink = req.body.embedUrl;
-	var embedTitle = req.body.embedTitle;
-	// User.findById(req.user._id, function(err, user){
-	// 	if(err){
-	// 		console.log(err)
-	// 	}else{
-	// 		console.log(user.links)
-	// 	}
-	// });
+	//if the the user sent an empty packet to the backend just do nothing else
+	//do everything as normal
+	if (req.body.editData.length <= 0) {
+		res.redirect('/dashboard');
+	} else {
 
-	User.findById(req.user._id, function (err, user) {
-		if (err) {
-			console.log(err)
-		} else {
-			// $push: {urls: { title: inTitle, url: inLink};
-			if (inTitle == null || inLink == null) {
+		//creating the json object of data to edit in the db
+		let editArray = (JSON.parse(req.body.editData))
 
-			}
-			else {
-				user.urls.push({ title: inTitle, url: inLink });
-				user.save();
+		insertIntoDB(editArray).then(setTimeout(() => {
+			res.redirect('/dashboard')
+		}, 5000));
+
+		/**
+		takes the data parameter full of json objects executes all the indicated database alterations
+		@async
+		@param data {array} an array of json objects
+		*/
+		async function insertIntoDB(data) {
+			data.forEach(item => {
+
+				var inLink = item.url;
+				var inTitle = item.title;
+
+				var embedLink = item.embedUrl;
+				var embedTitle = item.embedTitle;
+
+				/*
+				if the current json object's action is set to save, execute actions that
+				saves data to the database
+				*/
+				if (item.action == 'save') {
+					User.findById(req.user._id, function(err, user) {
+						if (err) {
+							console.log(err);
+						} else {
+							if (inTitle == null || inLink == null || inLink == '' || inTitle == '') {
+
+							} else {
+								/*
+								if the postion is set to absolute while both the top and left attribute
+								are 0 then the button will move to a weird spot
+								*/
+								let position = 'absolute';
+								if (item.top == 0 && item.left == 0) {
+									position = ''
+								}
+
+								user.urls.push({
+									title: inTitle,
+									url: inLink,
+									top: item.top,
+									left: item.left,
+									position: position
+								});
+								user.save();
+							}
+						}
+					});
+
+					User.findById(req.user._id, function(err, user) {
+						if (err) {
+							console.log(err);
+						} else {
+							// $push: {urls: { title: inTitle, url: inLink};
+							if (embedTitle == null || embedLink == null || embedTitle == "" || embedLink == "") {
+
+							} else {
+								//if the postion is set to absolute while both the top and left attribute
+								//are 0 then the button will move to a weird spot
+								let position = 'absolute';
+								if (item.top == 0 && item.left == 0) {
+									position = ''
+								}
+
+								user.embeds.push({
+									title: embedTitle,
+									url: embedLink,
+									top: item.top,
+									left: item.left,
+									position: position
+								});
+								user.save();
+							}
+						}
+					});
+					/*
+					if the current packet has an _id in the json that means it exsists within the db
+					so there must be a move change going on. the below code checks for that _id and then
+					updates the db accodingly
+					*/
+					if (item._id != null) {
+						const username = req.body.username;
+						let top = item.top;
+						let left = item.left;
+						let elementId = item._id;
+
+						User.findOne({ username: username }).exec(function(err, user) {
+							if (!user) {
+								req.flash('error', 'that user does not exsist');
+								return res.redirect('/');
+							}
+							//for here i need to find a way to specify if what was moved was an embed or a url to
+							//search the correct array, also this stuff kinda seems like it is slow so maybe a faster way
+							//would be better
+
+							for (var i = 0; i < user.urls.length; i++) {
+								if (user.urls[i]._id == elementId) {
+									user.urls[i].top = top;
+									user.urls[i].left = left;
+									user.urls[i].position = "absolute";
+								}
+							}
+
+							for (var i = 0; i < user.embeds.length; i++) {
+								if (user.embeds[i]._id == elementId) {
+									user.embeds[i].top = top;
+									user.embeds[i].left = left;
+									user.embeds[i].position = "absolute";
+								}
+							}
+							user.save();
+						});
+					}
+				};
+				/*
+				if the current json object's action is set to delete, delete that entry
+				from the database
+				*/
+				if (item.action == 'delete') {
+
+					//deletes URLs
+					User.findById(req.user._id, function(err, user) {
+						if (err) {
+							console.log(err);
+						}
+					}).updateOne({}, {
+						$pull: {
+							urls: {
+								_id: item._id
+							}
+						}
+					});
+
+					//DELETES: Embeds
+					User.findById(req.user._id, function(err, user) {
+						if (err) {
+							console.log(err);
+						}
+					}).updateOne({}, {
+						$pull: {
+							embeds: {
+								_id: item._id
+							}
+						}
+					});
+				}
+
+				if (item.action == 'pfpChange') {
+
+					User.findById(req.user._id, function(err, user) {
+						if (err) {
+							console.log(err);
+						} else {
+							user.pfp = item.picture;
+							user.save();
+						}
+					});
+				}
+			});
+		};
+	}
+});
+
+router.post('/moveElement', ensureAuthenticated, (req, res) => {
+	const username = req.body.username;
+	let top = req.body.top;
+	let left = req.body.left;
+	let elementId = req.body.elementId;
+
+	User.findOne({ username: username }).exec(function(err, user) {
+		if (!user) {
+			req.flash('error', 'that user does not exsist');
+			return res.redirect('/');
+		}
+		//for here i need to find a way to specify if what was moved was an embed or a url to
+		//search the correct array, also this stuff kinda seems like it is slow so maybe a faster way
+		//would be better
+
+		for (var i = 0; i < user.urls.length; i++) {
+			if (user.urls[i]._id == elementId) {
+				user.urls[i].top = top;
+				user.urls[i].left = left;
+				user.urls[i].position = "absolute";
 			}
 		}
+
+		for (var i = 0; i < user.embeds.length; i++) {
+			if (user.embeds[i]._id == elementId) {
+				user.embeds[i].top = top;
+				user.embeds[i].left = left;
+				user.embeds[i].position = "absolute";
+			}
+		}
+		user.save();
 	});
-	// User.findById(req.user._id, function(err, user) {
-	// 	if (err) {
-	// 		console.log(err)
-	// 	} else {
-	// 		// $push: {urls: { title: inTitle, url: inLink};
-	// 		if (inTitle == null || inLink == null) {
-
-	// 		}
-	// 		else {
-	// 			user.embeds.push({ url: embedLink });
-	// 			user.save();
-	// 		}
-	// 	}
-	// });
-
-	User.findById(req.user._id, function (err, user) {
-		if (err) {
-			console.log(err)
-		} else {
-			// $push: {urls: { title: inTitle, url: inLink};
-			if (embedTitle == null || embedLink == null) {
-
-			}
-			else {
-				user.embeds.push({ title: embedTitle, url: embedLink });
-				user.save();
-			}
-		}
-	});
-	// User.findById(req.user._id, function(err, user) {
-	// 	if (err) {
-	// 		console.log(err)
-	// 	} else {
-	// 		// $push: {urls: { title: inTitle, url: inLink};
-	// 		if (inTitle == null || inLink == null) {
-
-	// 		}
-	// 		else {
-	// 			user.urls.pull({ _id: req.body.linkId });
-	// 			console.log("link removed");
-	// 			user.save();
-	// 		}
-	// 	}
-	// });
-
-	//deletes URLs
-	User.findById(req.user._id, function (err, user) {
-		if (err) {
-			console.log(err)
-		}
-	}).updateOne(
-		{},
-		{ $pull: { urls: { _id: req.body.linkId } } }
-	);
-
-	//DELETES: Embeds 
-	User.findById(req.user._id, function (err, user) {
-		if (err) {
-			console.log(err)
-		}
-	}).updateOne(
-		{},
-		{ $pull: { embeds: { _id: req.body.embID } } }
-	);
-
-	res.redirect('/dashboard');
 });
 
 //Search for user
@@ -128,20 +242,16 @@ router.post('/search', (req, res) => {
 	} else {
 		//This finds the user through case insenstive search, but doesnt change the link
 		User.find({ username: new RegExp(username, 'i') }).exec((err, user) => {
-			console.log(username);
-			console.log(user);
 
 			if (user == 0) {
 				//checking which values were found in the database to print the error in order to see if search bar is catching data
 				errors.push({ msg: 'Username Not Found.. :(' });
-				console.log("Username Not Found!");
 				res.render('searchUser', {
 					errors
 				});
 
 			} else {
 				for (var i = 0; i < user.length; i++) {
-					console.log("Username Found!");
 					return res.render('searchUser', {
 						errors,
 						user, username
@@ -150,6 +260,10 @@ router.post('/search', (req, res) => {
 			}
 		});
 	}
+});
+
+router.get('/:userProfile', function(req, res) {
+	res.redirect('/profile/' + req.params.userProfile);
 });
 
 
@@ -169,13 +283,6 @@ var requiresAdmin = function() {
 //making all admin routes check to see if the user is an admin
 router.all('/admin', requiresAdmin());
 router.all('/admin/*', requiresAdmin());
-
-// var test = document.getElementById('jeff');
-// test.onclick = deleteEntry();
-
-function deleteEntry() {
-	//req.user._id.urls.splice(index,1);
-};
 
 
 

@@ -1,189 +1,174 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <%- include ('./partials/messages') %>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="/js/funcs.js"></script>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Home - C-Hub</title>
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
-    <link rel="stylesheet" href="/css/Growing-Search-Bar-Animated-Text-Input.css">
-    <link rel="stylesheet" href="/css/Search-Input-responsive.css">
 
+<head>
+  <%- include ('./partials/messages') %>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>Home - C-Hub</title>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="/css/Growing-Search-Bar-Animated-Text-Input.css">
+  <link rel="stylesheet" href="/css/Search-Input-responsive.css">
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 
-<script>
-    function myFunction() {
-
-            //document.getElementById("linkForm").hidden = toggle;
-            if (document.getElementById("linkForm").hidden == true){
-                document.getElementById("linkForm").hidden = false;
-            }
-            else{
-                document.getElementById("linkForm").hidden = true;
-            }
-        }
-
-    function editProf() {
-
-        //document.getElementById("linkForm").hidden = toggle;
-        if (document.getElementById("linkBtn").hidden == true){
-            document.getElementById("linkBtn").hidden = false;
-        }
-        else{
-            document.getElementById("linkBtn").hidden = true;
-        }
-    }
-
-       function showEmbed() {
-            //document.getElementById("linkForm").hidden = toggle;
-
-            if (document.getElementById("EmbedForm").hidden == true){
-                document.getElementById("EmbedForm").hidden = false;
-            }
-            else{
-                document.getElementById("EmbedForm").hidden = true;
-            }
-        }
-
-        function showEmbedContent(id, HTML){
-        if(document.getElementById(id).hidden == true){
-            document.getElementById(id).hidden = false;
-            console.log(index);
-            //document.getElementById(id).innerHTML = HTML;
-        }
-        else{
-            document.getElementById(id).hidden = true;
-        }
-    }
-</script>
-
 <body id="page-top">
-    <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
-        <a href='/'><div class="container"><img src="/img/C-hub%20(3).png"></a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
-                <div class="d-flex justify-content-center h-100">
-                    <form action="/search" method="post">
-                    <div class="searchbar"><input type="text" name="username" class="search_input" placeholder="Search..."><button class="search_icon" type="sumbit"><i class="fas fa-search"></i></button></div>
-                    </form>
-                </div>
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link active js-scroll-trigger" href="#">Link</a></li>
-                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#media">Media Content</a></li>
-                    <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="#report">Report</a></li>
-                    <li class="nav-item"></li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
-                </ul>
-                <ul class="navbar-nav">
-                    <!-- Header Tags //logout, changePassword -->
-                    <li class="nav-item"></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <header class="masthead" style="background-image:url('/img/intro-bg.jpg');">
-        <div class="intro-body">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 mx-auto">
-                    <br>
-
-                    <!-- Display added link to profile.ejs? -->
-
-                    <!-- <form action="/dashboard" method="post" id='remove-btn'>  -->
-
-                        <!-- Here, try to see if passing user.urls object id back to the backend will allow it to be removed? -->
-                        <img style = "border-radius: 50%;" src="/img/avatar.jpg">
-                        <h1 class="brand-heading" style = "margin-bottom:auto"><%= user.username %></h1>
-                        <a class="btn btn-link btn-circle js-scroll-trigger"  role="button" href="#media"><i class="fa fa-angle-double-down animated"></i></a>
-                        <div class="container">
-                        <% for( let index = 0; index < user.urls.length; index++ ) { %>
-                        <!-- onclick="deleteEntry('<%# user._id %>','<%# user.urls[index].title %>', '<%# user.urls[index].url %>' -->
-                        <!-- FIX LATER: <button frommethod = "post" formaction="/dashboard" id = "jeff">remove{icon}</button> -->
-                        <div class="row">
-                            <div class= "col-md-12">
-                                <br><a class = "btn btn-primary btn-lg btn-default" target="_blank" style="margin: -5px; width: 75%;" href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
-                            </div>
-                        </div>
-                    <% } %>
-                    </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <section class="text-center content-section" id="media">
-     <h2><p style = "font-size: 32pt;">Media Content</p></h2>
-        <div class = "container">
-                <%for (let index = 0; index < user.embeds.length; index++) { %>
-                    <div class = "row">
-                        <div class = "col-md-12">
-
-                        <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin-top: 15px; width: 50%;" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
-                        <button class="remove-btn btn btn-red" style="margin-left: 7px;" hidden = "true" onmousedown="delEmb('<%=user.embeds[index]._id%>','<%=index%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
-                        <br>
-                        <div style="margin-top: 30px;" id='<%=user.embeds[index]._id%>' hidden= true>
-                            <%-user.embeds[index].url%>
-                        </div>
-                     </div>
-                    </div>
-                    <% } %>
-                </div>
-    </section>
-
-    <section class="download-section content-section" id="download" style="background-image:url('/img/downloads-bg.jpg');">
-    <section id="report">
-
-        <p style = "font-size: 20pt; margin-left: 20px; margin-bottom: 20px"><u>Report User</u></p>
-
-        <form style = "margin-left: 20px; height: 37px;" id="myForm">
-          <label for="reason">Reason</label><br>
-          <select style="margin-bottom: 30px; height: 50px; width: 300px;" id="reason" name="reason">
-            <option value="" disabled selected>Select your reason..</option>
-            <option value="Leads to bad website">Leads to bad website</option>
-            <option value="Misleading link">Misleading link</option>
-            <option value="Inappropriate profile picture">Inappropriate profile picture</option>
-            <option value="Unacceptable profanity in link name">Unacceptable profanity in link name</option>
-            <option value="Other">Other</option>
-          </select><br>
-          <label>comment:</label><br>
-          <input style="margin-bottom: 30px; height: 50px; width: 300px;" type="text" id="comment" name="comment">
-          <input type="hidden" id="username" name="username" value="<%= user.username%>" />
-          <input class='btn btn-white' id='button' type="submit" value="Submit">
+  <nav class="navbar navbar-light navbar-expand-md fixed-top" id="mainNav">
+    <a href='/'>
+      <div class="container"><img src="/img/C-hub%20(3).png">
+    </a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i
+        class="fa fa-bars"></i></button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <div class="float-left float-md-right mt-5 mt-md-0 search-area"></div>
+      <div class="d-flex justify-content-center h-100">
+        <form action="/search" method="post">
+          <div class="searchbar"><input type="text" name="username" class="search_input" placeholder="Search..."><button class="search_icon" type="sumbit"><i class="fas fa-search"></i></button></div>
         </form>
+      </div>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"></li>
+        <!-- this  EJS code below will display the logout button if the user is logged in and login button if not -->
+        <% if (auth_info == true){ %>
+        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/dashboard">Dashboard</a></li>
+        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/users/logout">Logout</a></li>
+        <%} else { %>
+        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/users/login">Login</a></li>
+        <li class="nav-item nav-link js-scroll-trigger"><a class="nav-link js-scroll-trigger" href="/users/register">Register</a></li>
+        <% } %>
+      </ul>
+      <ul class="navbar-nav">
+        <!-- Header Tags //logout, changePassword -->
+        <li class="nav-item"></li>
+      </ul>
+    </div>
+  </nav>
+  <header class="masthead bg-transparent">
+    <div class="intro-body">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <img style="border-radius: 50%;" src="data:image/png;base64,<%=user.pfp%>">
+            <h1 class="brand-heading" style="margin-bottom:auto"><%= user.username %></h1>
+
+            <div class="container">
+              <% for( let index = 0; index < user.urls.length; index++ ) { %>
+              <div class="row">
+                <div style="z-index: 999; position: <%=user.urls[index].position%>; top: <%=user.urls[index].top%>; left: <%=user.urls[index].left%>;" class="col-md-12">
+                  <a class="btn btn-primary btn-lg btn-default" target="_blank" style="margin: 10px; width: 75%;" href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
+                </div>
+              </div>
+              <% } %>
+            </div>
+
+            <div class="container">
+              <%for (let index = 0; index < user.embeds.length; index++) { %>
+              <div class="row">
+                <div style="z-index: 999; position: <%=user.embeds[index].position%>; top: <%=user.embeds[index].top%>; left: <%=user.embeds[index].left%>;" class="col-md-12">
+                  <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin: 10px; width: 75%;" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
+                  <div  id='<%=user.embeds[index]._id%>' hidden=true>
+                    <%-user.embeds[index].url%>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
 
-          <!-- <label style="margin-top: 10px;">Comment</label><br>
+  <section class="download-section content-section bg-transparent" id="download">
+    <section id="reports">
+
+      <p style="font-size: 20pt; margin-left: 20px; margin-bottom: 20px"><u>Report User</u></p>
+
+      <form style="margin-left: 20px; height: 37px;" id="myForm">
+        <label for="reason">Reason</label><br>
+        <select style="margin-bottom: 30px; height: 50px; width: 300px;" id="reason" name="reason">
+          <option value="" disabled selected>Select your reason..</option>
+          <option value="Leads to bad website">Leads to bad website</option>
+          <option value="Misleading link">Misleading link</option>
+          <option value="Inappropriate profile picture">Inappropriate profile picture</option>
+          <option value="Unacceptable profanity in link name">Unacceptable profanity in link name</option>
+          <option value="Other">Other</option>
+        </select><br>
+        <label>comment:</label><br>
+        <input style="margin-bottom: 30px; height: 50px; width: 300px;" type="text" id="comment" name="comment">
+        <input type="hidden" id="username" name="username" value="<%= user.username%>" />
+        <input class='btn btn-white' id='reportButton' type="submit" value="Submit">
+      </form>
+
+
+      <!-- <label style="margin-top: 10px;">Comment</label><br>
           <input style="margin-bottom: 30px; height: 50px; width: 300px;" type="text" id="comment" name="comment">
           <input type="hidden" id="username" name="username" value=<%= user.username%> />
           <input class = "btn btn-white" id='button' type="submit" value="Submit">
         </form> -->
 
     </section>
-    </section>
+  </section>
 
-    <div class="map-clean"></div>
-    <footer>
-        <div class="container text-center">
-            <p>Copyright ©&nbsp;C-Hub 2021</p>
-        </div>
-    </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-    <script src="/js/grayscale.js"></script>
+  <div class="map-clean"></div>
+  <footer>
+    <div class="container text-center">
+      <p>Copyright ©&nbsp;C-Hub 2021</p>
+    </div>
+  </footer>
+
+  <script>
+    function myFunction() {
+
+      //document.getElementById("linkForm").hidden = toggle;
+      if (document.getElementById("linkForm").hidden == true) {
+        document.getElementById("linkForm").hidden = false;
+      } else {
+        document.getElementById("linkForm").hidden = true;
+      }
+    }
+
+    function editProf() {
+
+      //document.getElementById("linkForm").hidden = toggle;
+      if (document.getElementById("linkBtn").hidden == true) {
+        document.getElementById("linkBtn").hidden = false;
+      } else {
+        document.getElementById("linkBtn").hidden = true;
+      }
+    }
+
+    function showEmbed() {
+      //document.getElementById("linkForm").hidden = toggle;
+
+      if (document.getElementById("EmbedForm").hidden == true) {
+        document.getElementById("EmbedForm").hidden = false;
+      } else {
+        document.getElementById("EmbedForm").hidden = true;
+      }
+    }
+
+    function showEmbedContent(id, HTML) {
+      if (document.getElementById(id).hidden == true) {
+        document.getElementById(id).hidden = false;
+        //document.getElementById(id).innerHTML = HTML;
+      } else {
+        document.getElementById(id).hidden = true;
+      }
+    }
+  </script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+  <script src="/js/grayscale.js"></script>
+  <script type="text/javascript" src="/js/reportFunc.js"></script>
 </body>
 
 </html>

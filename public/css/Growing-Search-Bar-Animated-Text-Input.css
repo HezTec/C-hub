@@ -1,7 +1,6 @@
 .searchbar {
   margin-bottom: auto;
   margin-top: auto;
-  margin-left: 10px;
   height: 60px;
   background-color: #353b48;
   border-radius: 30px;
@@ -13,7 +12,7 @@
   border: 0;
   outline: 0;
   background: none;
-  width: 0;
+  width: 50px;
   caret-color: transparent;
   line-height: 40px;
   transition: width 0.4s linear;
@@ -21,7 +20,7 @@
 
 .searchbar:hover > .search_input {
   padding: 0 10px;
-  width: 380px;
+  width: 250px;
   caret-color: red;
   transition: width 0.4s linear;
 }
@@ -47,4 +46,3 @@ img {
   width: 150px;
   margin-bottom: 10px;
 }
-

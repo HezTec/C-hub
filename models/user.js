@@ -46,20 +46,36 @@ const UserSchema = new mongoose.Schema({
     default: false
   },
 
-  testPhrase: {
+  pfp: {
     type: String,
-    default: 'this is the test string'
+    default: false
   },
 
-  urls: [{
-    title: String,
-    url: mongoose.SchemaTypes.Url
-  }],
+  suspended: {
+    isSuspended: Boolean,
+    unSuspendDate: Date,
+    reason: String
+  },
 
-  embeds: [{
-    title: String,
-    url: String
-  }]
+  urls: {
+    type: [{
+      title: String,
+      url: mongoose.SchemaTypes.Url,
+      top: String,
+      left: String,
+      position: String
+    }]
+  },
+
+  embeds: {
+    type: [{
+      title: String,
+      url: String,
+      top: String,
+      left: String,
+      position: String
+    }]
+  }
 
 
 });
