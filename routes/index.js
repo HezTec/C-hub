@@ -178,6 +178,17 @@ router.post('/dashboard', ensureAuthenticated, (req, res) => {
 					});
 				}
 
+				if (item.action == 'pfpChange') {
+
+					User.findById(req.user._id, function(err, user) {
+						if (err) {
+							console.log(err);
+						} else {
+							user.pfp = item.picture;
+							user.save();
+						}
+					});
+				}
 			});
 		};
 	}
@@ -251,6 +262,10 @@ router.post('/search', (req, res) => {
 	}
 });
 
+router.get('/:userProfile', function(req, res) {
+	res.redirect('/profile/' + req.params.userProfile);
+});
+
 
 //the custom middleware that checks if user is an admin
 var requiresAdmin = function() {
@@ -268,10 +283,6 @@ var requiresAdmin = function() {
 //making all admin routes check to see if the user is an admin
 router.all('/admin', requiresAdmin());
 router.all('/admin/*', requiresAdmin());
-
-function deleteEntry() {
-	//req.user._id.urls.splice(index,1);
-};
 
 
 

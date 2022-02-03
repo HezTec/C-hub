@@ -259,7 +259,7 @@ router.post('/unsuspendUser/:userID', (req, res) => {
 
 router.get('/suspendedList', (req, res) => {
   //getting a list of all suspended users to display
-  User.find({ suspended: true }).exec(function(err, list) {
+  User.find({ 'suspended.isSuspended': true }).exec(function(err, list) {
     if (!list) {
       req.flash('error', 'no users found');
       return res.redirect('/admin');

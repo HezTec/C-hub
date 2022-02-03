@@ -19,7 +19,7 @@ router.get('/:userProfile', function(req, res) {
     //if that user isnt in the db, will redirect to the home screen
     if (!user) {
       req.flash('error', '  That user does not exsist');
-      return res.redirect('/dashboard');
+      return res.redirect('/');
     } else if (user.suspended.isSuspended == true) { //checking if the users account is suspended and loading the suspended page if they are
 
       //checking to see if the users suspension is over and if it is updating the db entry

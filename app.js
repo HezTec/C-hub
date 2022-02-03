@@ -72,10 +72,10 @@ app.use((req, res, next) => {
 app.use(flash());
 
 //Routes
+app.use('/admin', require('./routes/admin'));
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/profile', require('./routes/profile'));
-app.use('/admin', require('./routes/admin'));
 
 
 app.listen(3000);

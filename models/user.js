@@ -46,10 +46,10 @@ const UserSchema = new mongoose.Schema({
     default: false
   },
 
-  // suspended: {
-  //   type: Boolean,
-  //   default: false
-  // },
+  pfp: {
+    type: String,
+    default: false
+  },
 
   suspended: {
     isSuspended: Boolean,
@@ -58,11 +58,23 @@ const UserSchema = new mongoose.Schema({
   },
 
   urls: {
-    type: [{ title: String, url: mongoose.SchemaTypes.Url, top: String, left: String, position: String }]
+    type: [{
+      title: String,
+      url: mongoose.SchemaTypes.Url,
+      top: String,
+      left: String,
+      position: String
+    }]
   },
 
   embeds: {
-    type: [{ title: String, url: String, top: String, left: String, position: String }]
+    type: [{
+      title: String,
+      url: String,
+      top: String,
+      left: String,
+      position: String
+    }]
   }
 
 

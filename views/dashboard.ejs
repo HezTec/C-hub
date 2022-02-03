@@ -53,27 +53,33 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 mx-auto">
-            <img style="border-radius: 50%;" src="/img/avatar.jpg">
+            <img style="border-radius: 50%;" src="data:image/png;base64,<%=user.pfp%>">
             <h1 class="brand-heading" style="margin-bottom:auto"><%= user.username %></h1>
-            <button onclick="showURL()" class="btn btn-primary btn-lg btn-default" id="linkBtn" hidden='true'> Add a link </button>
-            <button onclick="showEmbed()" class="btn btn-primary btn-lg btn-default" id="EmbedBtn" hidden='true'> Add an embed </button>
 
-            <div id="linkForm" class="linkInput" padding='20px' hidden>
-              <!-- <form action="/dashboard" method="post" id="linkForm" hidden> This is the old post method for creating links before the save system started development -->
-                <input type="text" name="linkTitle" id="linkTitle" placeholder="Title" required/>
-                <input type="url" name="linkUrl" id="linkUrl" placeholder="Link"required />
+            <div name="editProf">
+
+              <div id="fileForm" class="linkInput" padding='20px' hidden>
+                <input type="file" name="pfpInput" id="pfpInput" onchange="return uploadValidation()"/>
+              </div>
+
+              <button onclick="showURL()" class="btn btn-primary btn-lg btn-default" id="linkBtn" hidden='true'> Add a link </button>
+              <button onclick="showEmbed()" class="btn btn-primary btn-lg btn-default" id="EmbedBtn" hidden='true'> Add an embed </button>
+              <div id="linkForm" class="linkInput" padding='20px' hidden>
+                <!-- <form action="/dashboard" method="post" id="linkForm" hidden> This is the old post method for creating links before the save system started development -->
+                <input type="text" name="linkTitle" id="linkTitle" placeholder="Title" required />
+                <input type="url" name="linkUrl" id="linkUrl" placeholder="Link" required />
                 <button type="submit" value="Submit" onclick="clientAddLink()">Submit</button>
-              <!-- </form> -->
-            </div>
+                <!-- </form> -->
+              </div>
 
-            <div id="embedForm" class="EmbedInput" padding='20px' hidden>
-              <!-- <form  action="/dashboard" method="post" id="EmbedForm" hidden> -->
-                <input type="text" name="embedTitle" id="embedTitle" placeholder="Title/Site" required/>
-                <input name="embedUrl" id="embedUrl" placeholder="Paste Embed from Site" required/>
+              <div id="embedForm" class="EmbedInput" padding='20px' hidden>
+                <!-- <form  action="/dashboard" method="post" id="EmbedForm" hidden> -->
+                <input type="text" name="embedTitle" id="embedTitle" placeholder="Title/Site" required />
+                <input name="embedUrl" id="embedUrl" placeholder="Paste Embed from Site" required />
                 <button type="submit" value="Submit" onclick="clientAddEmbed()">Submit</button>
-              <!-- </form> -->
+                <!-- </form> -->
+              </div>
             </div>
-
             <!-- username input for backend ajax call-->
             <input type="hidden" id="username" name="username" value="<%= user.username%>" />
 
@@ -81,7 +87,8 @@
               <% for( let index = 0; index < user.urls.length; index++ ) { %>
               <div class="row">
                 <div style="z-index: 999; position: <%=user.urls[index].position%>; top: <%=user.urls[index].top%>; left: <%=user.urls[index].left%>;" class="col-md-12">
-                  <button id="moveBtnLink<%=index%>" class="btn move-btn btn-secondary" hidden="true" onmousedown="moveContents(document.getElementById('moveBtnLink<%=index%>').parentElement, '<%=user.urls[index]._id%>')"><i class="bi bi-arrows-move"aria-hidden="true"></i></button>
+                  <button id="moveBtnLink<%=index%>" class="btn move-btn btn-secondary" hidden="true" onmousedown="moveContents(document.getElementById('moveBtnLink<%=index%>').parentElement, '<%=user.urls[index]._id%>')"><i class="bi bi-arrows-move"
+                      aria-hidden="true"></i></button>
                   <a class="btn btn-primary btn-lg btn-default" style="margin: 10px; width: 75%;" href="<%=user.urls[index].url%>"><%=user.urls[index].title%></a>
                   <button id="deleteButton<%=index%>" class="btn remove-btn btn-outline-danger" hidden="true" onmousedown="delLink('<%=user.urls[index]._id%>', 'deleteButton<%=index%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
                 </div>
@@ -93,10 +100,12 @@
               <%for (let index = 0; index < user.embeds.length; index++) {%>
               <div class="row">
                 <div style="z-index: 999; position: <%=user.embeds[index].position%>; top: <%=user.embeds[index].top%>; left: <%=user.embeds[index].left%>;" class="col-md-12">
-                  <button id="moveBtnEmbed<%=index%>" class="btn move-btn btn-secondary" hidden="true" onmousedown="moveContents(document.getElementById('moveBtnEmbed<%=index%>').parentElement, '<%= user.embeds[index]._id%>')"><i class="bi bi-arrows-move" aria-hidden="true"></i>
+                  <button id="moveBtnEmbed<%=index%>" class="btn move-btn btn-secondary" hidden="true" onmousedown="moveContents(document.getElementById('moveBtnEmbed<%=index%>').parentElement, '<%= user.embeds[index]._id%>')"><i
+                      class="bi bi-arrows-move" aria-hidden="true"></i>
                   </button>
                   <button class="emb-btn btn btn-primary btn-lg btn-default" style="margin: 10px; width: 75%;" onclick="showEmbedContent('<%=user.embeds[index]._id%>','<%=user.embeds[index].url%>')"> <%=user.embeds[index].title%></button>
-                  <button id="deleteEmbedButton<%=index%>" class="btn remove-btn btn-outline-danger" hidden="true" onmousedown="delLink('<%=user.embeds[index]._id%>','deleteEmbedButton<%=index%>')"><i class="fa fa-trash" aria-hidden="true"></i> </button>
+                  <button id="deleteEmbedButton<%=index%>" class="btn remove-btn btn-outline-danger" hidden="true" onmousedown="delLink('<%=user.embeds[index]._id%>','deleteEmbedButton<%=index%>')"><i class="fa fa-trash" aria-hidden="true"></i>
+                  </button>
                   <div id='<%=user.embeds[index]._id%>' hidden=true>
                     <%-user.embeds[index].url%>
                   </div>
@@ -108,7 +117,7 @@
               <form action="/dashboard" method="post">
                 <input type="hidden" id="username" name="username" value="<%= user.username%>" />
                 <input type="hidden" id="editData" name="editData" value />
-                <button  id="saveButton" class="emb-btn btn btn-primary btn-lg btn-default" style="margin: 10px; width: 25%;" hidden=true>SAVE</button>
+                <button id="saveButton" class="emb-btn btn btn-primary btn-lg btn-default" style="margin: 10px; width: 25%;" hidden=true>SAVE</button>
               </form>
             </div>
           </div>
